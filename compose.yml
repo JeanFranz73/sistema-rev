@@ -1,0 +1,32 @@
+networks:
+  default:
+
+
+services:
+  db:
+    image: mysql
+    container_name: rev_db
+    restart: always
+    volumes:
+      - .docker/mysql:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sistema_rev
+    networks:
+      - default
+
+  pma:
+    image: phpmyadmin
+    container_name: rev_pma
+    restart: always
+    ports:
+      - 8000:80
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: password
+    depends_on:
+      - db
+    networks:
+      - default
