@@ -1,7 +1,3 @@
-networks:
-  default:
-
-
 services:
   db:
     image: mysql
@@ -9,7 +5,7 @@ services:
     restart: always
     volumes:
       - .docker/mysql:/var/lib/mysql
-      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+      # - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: sistema_rev
@@ -21,7 +17,7 @@ services:
     container_name: rev_pma
     restart: always
     ports:
-      - 8000:80
+      - 8088:80
     environment:
       PMA_HOST: db
       PMA_USER: root
@@ -30,3 +26,22 @@ services:
       - db
     networks:
       - default
+
+  api:
+    image: node
+    container_name: rev_api
+    restart: always
+    ports:
+      - 8000:8000
+    working_dir: /var/www/html
+    env_file:
+      - .env
+    volumes:
+      - ./api:/var/www/html
+    command: bash -c "npm install --quiet && npm run dev"
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
