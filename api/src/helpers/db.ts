@@ -1,4 +1,4 @@
-import knex from 'knex';
-import config from './config'
+import knex from 'knex'
+import config from '@/helpers/config'
 
-export default knex(config.db);
+export default knex(config.db)

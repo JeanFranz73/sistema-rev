@@ -1,41 +1,36 @@
-// const router = require('express').Router();
-// const User = require('#services/UserService.ts');
+import { Router } from 'express'
+import User from '@/services/User'
 
-import { Router } from 'express';
-import User from '@/services/User';
-
-const router = Router();
+const router = Router()
 
 router.get("/", async (req, res) => {
     res.status(422).json(
         {
             message: "Usuário não especificado"
         }
-    );
-});
+    )
+})
 
 router.get('/:id', async (req, res) => {
-    const id = req.params.id;
+    const id = req.params.id
 
     try {
-        const user = await User.findByUsername(id);
+        let user = await User.findById(id) ?? await User.findByUsername(id)
 
         if (!user) {
-            return res.status(404).json({
-                message: 'Usuário não encontrado'
+            res.status(404).json({
+                message: "Usuário não encontrado"
             })
         }
 
-        user.password = undefined;
-        res.status(200).json(user);
+        user.password = undefined
+        res.status(200).json(user)
     } catch (err) {
-        console.error(`Erro ao selecionar usuário: `, err);
+        console.error(`Erro ao selecionar usuário: `, err)
         res.status(500).json({
             message: "Erro ao selecionar usuário"
-        });
+        })
     }
-});
+})
 
-export default router;
-
-// module.exports = router;
+export default router

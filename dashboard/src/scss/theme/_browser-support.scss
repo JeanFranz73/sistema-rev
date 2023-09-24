@@ -1,0 +1,15 @@
+// Firefox fixed
+.firefox {
+  .dropcap:first-letter {
+    margin-top: 0.175em;
+  }
+  .card-notification {
+    min-height: 19rem;
+  }
+}
+
+.chrome {
+  .btn-close {
+    background-clip: unset;
+  }
+}
