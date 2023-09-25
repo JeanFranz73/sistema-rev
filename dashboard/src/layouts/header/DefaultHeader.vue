@@ -39,13 +39,13 @@ export default defineComponent({
         data-bs-toggle="collapse" data-bs-target="#navbarTopCollapse" aria-controls="navbarTopCollapse"
         aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span
             class="toggle-line"></span></span></button>
-      <a class="navbar-brand me-1 me-sm-3" href="../index.html">
+      <router-link to="/dashboard" class="navbar-brand me-1 me-sm-3" href="../index.html">
         <div class="d-flex align-items-center">
           <div class="d-flex align-items-center">
             <p class="logo-text ms-2 d-none d-sm-block">Sistema - Divar</p>
           </div>
         </div>
-      </a>
+      </router-link>
     </div>
     <div class="collapse navbar-collapse navbar-top-collapse order-1 order-lg-0 justify-content-center"
       id="navbarTopCollapse">
@@ -55,7 +55,6 @@ export default defineComponent({
             <feather-icon class="fs-0 me-2" type="shopping-bag" size="16" />
             <span>Pedidos</span>
           </a>
-
           <ul class="dropdown-menu navbar-dropdown-caret">
             <li>
               <router-link class="dropdown-item" to="/pedidos">
@@ -101,6 +100,12 @@ export default defineComponent({
               </router-link>
             </li>
           </ul>
+        </li>
+        <li>
+          <router-link class="nav-link lh-1" to="/dashboard/users">
+            <feather-icon class="fs-0 me-2" type="check" size="16" />
+            <span>Usuários</span>
+          </router-link> 
         </li>
       </ul>
     </div>

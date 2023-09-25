@@ -3,7 +3,7 @@ import DefaultHeader from '@/layouts/header/DefaultHeader.vue'
 
 export default {
     components: {
-        DefaultHeader
+        DefaultHeader,
     }
 }
 </script>
@@ -12,7 +12,7 @@ export default {
     <main>
         <default-header />
         <div class="content">
-            Tela Dashboard
+            <router-view />
         </div>
     </main>
 </template>
