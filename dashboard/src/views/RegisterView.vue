@@ -31,6 +31,10 @@ export default {
                         <label class="form-label" for="email">E-mail</label>
                         <input class="form-control" id="email" type="email" placeholder="nome@exemplo.com" />
                     </div>
+                    <div class="mb-3 text-start">
+                        <label class="form-label" for="email">CPF</label>
+                        <input class="form-control" id="email" type="email" placeholder="000.000.000-00" />
+                    </div>
                     <div class="row g-3 mb-3">
                         <div class="col-sm-6">
                             <label class="form-label" for="password">Senha</label>

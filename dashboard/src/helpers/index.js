@@ -1,3 +1,5 @@
+import feather from 'feather-icons'
+
 import {
     docReady,
     tooltipInit,
@@ -5,8 +7,15 @@ import {
     dropdownOnHover
 } from "@/helpers/utils"
 
-export const installHelpers = (Vue) => {
-    installIcons(Vue)
+import initList from "@/helpers/list"
+
+export const installAfter = () => {
+    docReady(feather.replace)
     docReady(dropdownOnHover)
     docReady(tooltipInit)
+    docReady(initList)
+}
+
+export const installHelpers = (Vue) => {
+    installIcons(Vue)
 }

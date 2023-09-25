@@ -11,10 +11,11 @@
     "@fontsource/nunito-sans": "^5.0.8",
     "@fortawesome/fontawesome-free": "^6.4.2",
     "@iconscout/unicons": "^4.0.8",
+    "@popperjs/core": "^2.11.8",
     "bootstrap": "5.2.3",
+    "list.js": "^2.3.1",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",
-    "vue-feather": "^2.0.0",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {

@@ -1,9 +1,11 @@
 {
 	"folders": [
 		{
+			"name": "Painel Admin",
 			"path": "dashboard"
 		},
 		{
+			"name": "API",
 			"path": "api"
 		}
 	],

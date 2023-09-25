@@ -103,9 +103,9 @@ export default defineComponent({
         </li>
         <li>
           <router-link class="nav-link lh-1" to="/dashboard/users">
-            <feather-icon class="fs-0 me-2" type="check" size="16" />
+            <feather-icon class="fs-0 me-2" type="users" size="16" />
             <span>Usuários</span>
-          </router-link> 
+          </router-link>
         </li>
       </ul>
     </div>
