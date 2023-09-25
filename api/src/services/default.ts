@@ -21,8 +21,8 @@ class DefaultService<T> {
 
     findById(id) {
         try {
-            const user = db(this.table).where({ id }).first()
-            return user
+            const item = db(this.table).where({ id }).first()
+            return item
         } catch (err) {
             console.error(`Erro ao selecionar item em ${this.table}: `, err)
             throw err
@@ -31,8 +31,8 @@ class DefaultService<T> {
 
     create(data) {
         try {
-            const user = db(this.table).insert(data)
-            return user
+            const item = db(this.table).insert(data)
+            return item
         } catch (err) {
             console.error(`Erro ao inserir item em ${this.table}: `, err)
             throw err
@@ -41,8 +41,8 @@ class DefaultService<T> {
 
     update(id, data) {
         try {
-            const user = db(this.table).where({ id }).update(data)
-            return user
+            const item = db(this.table).where({ id }).update(data)
+            return item
         } catch (err) {
             console.error(`Erro ao atualizar item em ${this.table}: `, err)
             throw err
@@ -51,8 +51,8 @@ class DefaultService<T> {
 
     delete(id) {
         try {
-            const user = db(this.table).where({ id }).del()
-            return user
+            const item = db(this.table).where({ id }).del()
+            return item
         } catch (err) {
             console.error(`Erro ao deletar item em ${this.table}: `, err)
             throw err

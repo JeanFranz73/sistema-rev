@@ -4,16 +4,16 @@ import * as morgan from 'morgan'
 const app = express()
 const port = 8000
 
-import usersRouter from '@/routes/users'
+import { installRoutes } from "@/routes"
 
-app.use(morgan('dev'));
-app.use(express.json());
+app.use(morgan('dev'))
+app.use(express.json())
 
 app.get("/", (req, res) => {
-    res.status(200).json({ status: "ok" });
-});
+    res.status(200).json({ status: "ok" })
+})
 
-app.use("/user", usersRouter);
+installRoutes(app)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
