@@ -29,7 +29,14 @@ class UserController {
             const salt = await bcrypt.genSalt(10)
             user.password = await bcrypt.hash(user.password, salt)
         }
-        return await UserService.create(user)
+
+        let userId = UserService.create(user)
+
+        if (userId) {
+            return await UserService.findById(userId)
+        }
+
+        throw new Error("Erro ao adicionar usuário")
     }
 
     async edit(userId: number | string, user: UserType) {

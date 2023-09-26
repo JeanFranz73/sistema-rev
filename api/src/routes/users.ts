@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import { verifyToken } from '@/middlewares/auth'
-import User from '@/controllers/UserController'
-import UserType from '@/types/User'
+import UserController from '@/controllers/UserController'
+import User from '@/types/User'
 
 const manyRouter = Router()
 
 manyRouter.get('/', async (req, res) => {
     try {
-        let users: UserType[] = await User.findAll()
+        let users: User[] = await UserController.findAll()
 
         if (!users) {
             res.status(404).json({
@@ -35,13 +35,15 @@ router.post('/new', async (req, res) => {
     delete newUser.active
 
     try {
-        let user = await User.add(newUser)
+        let user = await UserController.add(newUser)
 
         if (!user) {
             res.status(404).json({
                 message: "Usuário não encontrado"
             })
         }
+
+        delete user.password
 
         res.status(201).json(user)
     } catch (err) {
@@ -64,7 +66,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
     const newUser = req.body
 
     try {
-        const user = await User.edit(id, newUser)
+        const user = await UserController.edit(id, newUser)
 
         if (!user) {
             res.status(404).json({
@@ -87,7 +89,7 @@ router.get('/:id', async (req, res) => {
     const id = req.params.id
 
     try {
-        let user: UserType = await User.find(id)
+        let user: User = await UserController.find(id)
 
         if (!user) {
             res.status(404).json({

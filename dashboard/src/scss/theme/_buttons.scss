@@ -215,7 +215,7 @@ $value in $button-colors {
   }
 }
 
-//phoenix buttons
+//snipe buttons
 @each $color,
 $value in $button-colors {
   $hover-color: map-get($theme-hover-colors, $color);

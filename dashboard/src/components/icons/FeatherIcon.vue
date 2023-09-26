@@ -1,9 +1,8 @@
 <script>
-
 export default {
-    name: 'FontawesomeIcon',
+    name: 'FeatherIcon',
     props: {
-        type: {
+        icon: {
             type: String,
             required: true
         },
@@ -14,9 +13,9 @@ export default {
     },
     computed: {
         iconData() {
-            return this.type
+            return this.icon
         }
-    }
+    },
 }
 </script>
 

@@ -739,7 +739,7 @@ $scrollbar-bg: var(--#{$prefix}scrollbar-bg) !default;
 //|   Alert
 //-----------------------------------------------*/
 $alert-border-radius: map-get($spacers, 2) !default;
-$alert-padding-y: map-get($spacers, 4) !default;
+$alert-padding-y: map-get($spacers, 3) !default;
 $alert-padding-x: map-get($spacers, 4) !default;
 $alert-bg-scale: -80% !default;
 $alert-border-scale: -70% !default;

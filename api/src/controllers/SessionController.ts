@@ -41,6 +41,7 @@ class SessionController {
         const token = sign({
             user: {
                 id: user.id,
+                name: user.name,
                 username: user.username,
                 role: user.role,
                 email: user.email

@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
+import api from '@/utils/api'
+import JWT from '@/utils/jwt'
 
 export const useSessionStore = defineStore('session', {
     state: () => ({
-        token: String,
-        user: Object
+        token: '',
+        user: {}
     }),
     getters: {
         isLoggedIn(state) {
@@ -14,15 +16,23 @@ export const useSessionStore = defineStore('session', {
         },
         getUser(state) {
             return state.user
+        },
+        getFirstName(state) {
+            return state.user.name.split(' ')[0]
         }
     },
     actions: {
         fetch() {
-            this.token = localStorage.getItem('token') || ''
+            if (localStorage.getItem('token')) {
+                this.token = JWT.getToken(localStorage.getItem('token'))
+                this.user = JWT.getUser(localStorage.getItem('token'))
+                api.setBearerToken(this.token)
+            }
         },
-        setToken(token) {
-            this.token = token
-            localStorage.setItem('token', token)
+        async login(login) {
+            const { username, password } = login
+
+            return await api.post('/auth', { username, password })
         },
         logout() {
             this.token = ''
@@ -30,6 +40,11 @@ export const useSessionStore = defineStore('session', {
         },
         updateUser(user) {
             this.user = user
+        },
+        setToken(token) {
+            localStorage.setItem('token', token)
+            api.setBearerToken(token)
+            this.fetch()
         }
     }
 })

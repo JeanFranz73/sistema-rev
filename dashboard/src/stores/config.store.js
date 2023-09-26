@@ -4,10 +4,12 @@ export const useConfigStore = defineStore('config', {
     state: () => ({
         availableThemes: ['light', 'dark'],
         theme: '',
+        debugMode: true,
     }),
     getters: {
         isDarkTheme: (state) => state.theme === 'dark',
         getTheme: (state) => state.theme,
+        isDebugMode: (state) => state.debugMode,
     },
     actions: {
         fetch() {

@@ -1,10 +1,38 @@
 <script>
 import { RouterLink } from 'vue-router'
+import IMask from 'imask'
 
 export default {
     name: 'RegisterView',
+    data: () => ({
+        masks: {
+            cpf: Object,
+            cpfMask: ''
+        },
+        form: {
+            cpf: ''
+        }
+    }),
     components: {
         RouterLink
+    },
+    watch: {
+        masks: {
+            handler(val) {
+                this.form.cpf = this.masks.cpf.unmaskedValue
+            },
+            deep: true
+        }
+    },
+    methods: {
+        initMasks() {
+            this.masks.cpf = IMask(document.getElementById('cpf'), {
+                mask: '000.000.000-00'
+            })
+        }
+    },
+    mounted() {
+        this.initMasks()
     }
 }
 </script>
@@ -32,8 +60,9 @@ export default {
                         <input class="form-control" id="email" type="email" placeholder="nome@exemplo.com" />
                     </div>
                     <div class="mb-3 text-start">
-                        <label class="form-label" for="email">CPF</label>
-                        <input class="form-control" id="email" type="email" placeholder="000.000.000-00" />
+                        <label class="form-label" for="cpf">CPF</label>
+                        <input class="form-control" id="cpf" v-model="masks.cpfMask" placeholder="000.000.000-00"
+                            maxlength="14" />
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-sm-6">
@@ -52,7 +81,7 @@ export default {
                         <div class="divider-content-center mb-3">ou</div>
                     </div>
                     <div class="text-center">
-                        <router-link to="/login" class="fs--1 fw-bold">
+                        <router-link :to="{ name: 'login' }" class="fs--1 fw-bold">
                             <span>Entrar com uma conta existente</span>
                         </router-link>
                     </div>

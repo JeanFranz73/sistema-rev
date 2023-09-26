@@ -6,6 +6,10 @@ import '@fontsource/nunito-sans/700.css'
 import '@fontsource/nunito-sans/800.css'
 import '@fontsource/nunito-sans/900.css'
 
+/* Toast para notificações */
+import VueMyToasts from 'vue-my-toasts'
+import BaseToast from '@/components/toasts/BaseToast.vue'
+
 /* Ícones */
 
 import FeatherIcon from '@/components/icons/FeatherIcon.vue'
@@ -17,9 +21,16 @@ import FontawesomeIcon from '@/components/icons/FontawesomeIcon.vue'
 import '@fortawesome/fontawesome-free/css/all.css'
 
 export const installIcons = (Vue) => {
-    Vue.component('FeatherIcon', FeatherIcon)
-    Vue.component('UniconIcon', UniconIcon)
-    Vue.component('FontawesomeIcon', FontawesomeIcon)
+    Vue.use(VueMyToasts, {
+        component: BaseToast,
+        options: {
+            position: 'bottom-right',
+            duration: 500000
+        }
+    })
+    Vue.component(FeatherIcon.name, FeatherIcon)
+    Vue.component(UniconIcon.name, UniconIcon)
+    Vue.component(FontawesomeIcon.name, FontawesomeIcon)
 }
 
 /* Tooltips */

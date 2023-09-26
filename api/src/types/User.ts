@@ -1,6 +1,7 @@
 type UserType = {
     id: number
     username: string
+    name?: string
     password?: string
     role: number
     email: string

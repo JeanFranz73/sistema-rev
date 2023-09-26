@@ -1,51 +1,58 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import DashboardView from '@/views/DashboardView.vue'
 import { installAfter } from '@/helpers'
+import userRoutes from '@/router/userRoutes'
+import orderRoutes from '@/router/orderRoutes'
+import { useSessionStore } from '@/stores'
 
 const dashboardRoutes = [
-  {
-    path: 'users',
-    name: 'Users',
-    component: () => import('@/layouts/pages/UsersPage.vue')
-  },
-  {
-    path: 'user/:id',
-    name: 'user-profile',
-    component: () => import('@/layouts/pages/UserProfile.vue')
-  }
+    ...userRoutes,
+    ...orderRoutes
 ]
 
-const authRoutes = [
-  {
-    path: '/login',
-    name: 'Login',
+const authRoutes = [{
+    path: '/entrar',
+    name: 'login',
+    meta: { title: 'Entrar' },
     component: () => import('@/views/LoginView.vue')
-  },
-  {
-    path: '/register',
-    name: 'Register',
+}, {
+    path: '/registrar',
+    name: 'register',
+    meta: { title: 'Registrar' },
     component: () => import('@/views/RegisterView.vue')
-  }
-]
+}]
 
 const routes = [
-  { path: '/', redirect: '/dashboard' },
-  ...authRoutes,
-  {
-    path: '/dashboard',
-    name: 'Painel',
-    component: DashboardView,
-    children: dashboardRoutes
-  }
+    { path: '/', redirect: '/painel' },
+    ...authRoutes,
+    {
+        path: '/painel',
+        name: 'dashboard',
+        meta: { title: 'Painel' },
+        component: () => import('@/views/DashboardView.vue'),
+        children: dashboardRoutes
+    }
 ]
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+export const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes
 })
 
-router.afterEach(() => {
-  installAfter()
-})
+router.afterEach(installAfter)
 
-export default router
+router.beforeEach((to, from, next) => {
+    const session = useSessionStore()
+
+    document.title = to.meta.title + ' | Divar Semijoias'
+
+    if (!session.isLoggedIn) {
+        if (to.name == 'login' ||
+            to.name == 'register') {
+            next()
+        } else {
+            next({ name: 'login' })
+        }
+    } else {
+        next()
+    }
+})

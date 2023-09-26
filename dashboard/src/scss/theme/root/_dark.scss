@@ -100,7 +100,7 @@
   --#{$prefix}avatar-status-border-color: #{map-get($dark-common, 'white')};
   --#{$prefix}avatar-name-color: #{$blue-300};
 
-  /* ------------------------------ phoenix badge ----------------------------- */
+  /* ------------------------------ snipe badge ----------------------------- */
   @each $color,
   $value in map-remove($theme-colors-300, 'secondary') {
     .badge-snipe-#{$color} {
