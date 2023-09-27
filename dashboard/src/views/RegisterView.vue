@@ -1,6 +1,6 @@
 <script>
-import { RouterLink } from 'vue-router'
 import IMask from 'imask'
+import { validate } from '@/utils/validator'
 
 export default {
     name: 'RegisterView',
@@ -13,9 +13,6 @@ export default {
             cpf: ''
         }
     }),
-    components: {
-        RouterLink
-    },
     watch: {
         masks: {
             handler(val) {
@@ -28,6 +25,18 @@ export default {
         initMasks() {
             this.masks.cpf = IMask(document.getElementById('cpf'), {
                 mask: '000.000.000-00'
+            })
+        },
+        removeValidator(input) {
+            input.target.classList.remove('is-invalid', 'is-valid')
+        },
+        validateForm(input) {
+            validate(input)
+        },
+        doRegister(form) {
+            Array.from(form.target.elements).forEach((input) => {
+                // console.log(input)
+                validate(input)
             })
         }
     },
@@ -50,29 +59,35 @@ export default {
                     <h3 class="text-1000">Registrar-se</h3>
                     <p class="text-700">Crie sua conta</p>
                 </div>
-                <form>
+                <form @input="removeValidator" @focusout="validateForm" @submit.prevent="doRegister">
                     <div class="mb-3 text-start">
                         <label class="form-label" for="name">Nome</label>
-                        <input class="form-control" id="name" type="text" placeholder="Nome" />
+                        <input class="form-control" id="name" type="text" placeholder="Nome" required />
+                        <div class="invalid-feedback"></div>
                     </div>
                     <div class="mb-3 text-start">
                         <label class="form-label" for="email">E-mail</label>
                         <input class="form-control" id="email" type="email" placeholder="nome@exemplo.com" />
+                        <div class="invalid-feedback"></div>
                     </div>
                     <div class="mb-3 text-start">
                         <label class="form-label" for="cpf">CPF</label>
-                        <input class="form-control" id="cpf" v-model="masks.cpfMask" placeholder="000.000.000-00"
+                        <input class="form-control" id="cpf" v-model="masks.cpfMask" type="cpf" placeholder="000.000.000-00"
                             maxlength="14" />
+                        <div class="invalid-feedback"></div>
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-sm-6">
                             <label class="form-label" for="password">Senha</label>
-                            <input class="form-control form-icon-input" id="password" type="password" placeholder="Senha" />
+                            <input class="form-control form-icon-input" id="password" type="password" autocomplete="off"
+                                placeholder="Senha" />
+                            <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-sm-6">
-                            <label class="form-label" for="confirmPassword">Repita a senha</label>
-                            <input class="form-control form-icon-input" id="confirmPassword" type="password"
-                                placeholder="Repita a senha" />
+                            <label class="form-label" for="confirm-password">Repita a senha</label>
+                            <input class="form-control form-icon-input" id="confirm-password" type="password"
+                                autocomplete="off" placeholder="Repita a senha" />
+                            <div class="invalid-feedback"></div>
                         </div>
                     </div>
                     <button class="btn btn-primary w-100 mb-2">Registrar-se</button>

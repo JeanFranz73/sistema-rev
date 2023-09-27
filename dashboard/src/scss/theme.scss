@@ -17,3 +17,25 @@
 @import 'bootstrap';
 
 @import 'theme/theme';
+
+/* width */
+::-webkit-scrollbar {
+    display: flex;
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #0000;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

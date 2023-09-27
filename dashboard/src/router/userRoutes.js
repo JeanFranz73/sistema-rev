@@ -13,4 +13,7 @@ export default [{
     name: 'user-profile',
     meta: { title: 'Perfil do Usuário' },
     component: () => import('@/layouts/pages/UserProfile.vue')
+}, {
+    path: 'usuario',
+    redirect: { name: 'users' }
 }]

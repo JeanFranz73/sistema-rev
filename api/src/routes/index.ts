@@ -8,4 +8,5 @@ export const installRoutes = (app) => {
 
     // session authentication
     app.use("/auth", authRouter)
+    
 }

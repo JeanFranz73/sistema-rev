@@ -3,6 +3,7 @@ import api from '@/utils/api'
 
 export default {
     data: () => ({
+        loading: true,
         pedidos: [
             { order_id: 2453, status: 4, date: '12/12/2023', total: 87 },
             { order_id: 2452, status: 1, date: '09/12/2023', total: 7264 },
@@ -13,12 +14,16 @@ export default {
             { order_id: 2446, status: 4, date: '12/11/2023', total: 4116 },
             { order_id: 2445, status: 4, date: '19/10/2023', total: 4116 }
         ],
+        user: {
+            initial: 'U',
+            name: 'Nome de usuário',
+            username: 'usuario',
+            image: undefined
+        },
         ordersList: {
             valueNames: ['id', 'status', 'date', 'total'],
             page: 5,
         },
-        userId: '',
-        user: {}
     }),
     methods: {
         getPedidoStatus(status) {
@@ -63,7 +68,15 @@ export default {
         async getUser() {
             await api.get(`/user/${this.$route.params.id}`)
                 .then((res) => {
-                    this.user = res.data
+                    this.user = {
+                        ...res.data,
+                        initial: res.data.name.charAt(0),
+                        image: res.data.image ? res.data.image : undefined
+                    }
+                }).catch((err) => {
+                    this.$toasts.error(err.response.data.message)
+                }).finally(() => {
+                    this.loading = false
                 })
         }
     },
@@ -113,19 +126,20 @@ export default {
                     <div class="border-bottom border-dashed border-300 pb-4">
                         <div class="row align-items-center g-3 g-sm-5 text-center text-sm-start">
                             <div class="col-12 col-sm-auto">
-                                <div class="cursor-pointer avatar avatar-5xl">
-                                    <img v-if="true" class="rounded-circle" src="@/assets/img/profile.png" alt="" />
-                                    <div v-else class="avatar-name rounded-circle">
-                                        <span>R</span>
+                                <div class="user-select-none pe-none avatar avatar-5xl">
+                                    <img v-if="user.image" class="rounded-circle" src="@/assets/img/profile.png" alt="" />
+                                    <div v-else class=" avatar-name rounded-circle">
+                                        <span>{{ user.initial }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-auto flex-1">
-                                <h3 class="placeholder-glow">
-                                    <span v-if="user">{{ user.name }}</span>
-                                    <span v-else class="placeholder col-6"></span>
+                            <div class="col-12 col-sm-auto flex-1 placeholder-wave">
+                                <h3>
+                                    <span :class="loading ? 'placeholder placeholder-lg rounded w-50' : ''">{{ user.name
+                                    }}</span>
                                 </h3>
-                                <p class="text-800">Cadastrado há 3 meses</p>
+                                <p :class="loading ? 'placeholder placeholder-lg rounded w-25' : ''" class="text-800">{{
+                                    user.username }}</p>
                             </div>
                         </div>
                     </div>
@@ -170,14 +184,20 @@ export default {
                                 <h5 class="text-1000 mb-0">Email</h5>
                             </div>
                             <div class="col-auto">
-                                <a v-if="user.email" class="lh-1">{{ user.email }}</a>
+                                <a class="lh-1 placeholder-wave">
+                                    <span :class="loading ? 'placeholder rounded w-100' : ''">{{ user.email }}</span>
+                                </a>
                             </div>
                         </div>
                         <div class="row flex-between-center">
                             <div class="col-auto">
                                 <h5 class="text-1000 mb-0">Telefone</h5>
                             </div>
-                            <div class="col-auto"><a href="tel:+1234567890">(51) 1234-56789</a></div>
+                            <div class="col-auto">
+                                <a class="lh-1 placeholder-wave">
+                                    <span :class="loading ? 'placeholder rounded w-100' : ''">{{ user.phone }}</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -224,7 +244,7 @@ export default {
                                 </tr>
                             </thead>
                             <tbody class="list" id="profile-order-table-body">
-                                <tr v-for="pedido in pedidos" :key="pedido.id"
+                                <tr v-for=" pedido  in  pedidos " :key="pedido.id"
                                     class="hover-actions-trigger btn-reveal-trigger position-static">
                                     <td class="order align-middle white-space-nowrap py-2 ps-0">
                                         <router-link class="fw-semi-bold text-primary"
@@ -290,7 +310,7 @@ export default {
                                 </label>
                                 <div class="col-6 col-sm-2 col-lg-3 col-xl-2">
                                     <select class="form-select" id="date">
-                                        <option v-for="index in 30" :value="index">{{ index }}</option>
+                                        <option v-for=" index  in  30 " :value="index">{{ index }}</option>
                                     </select>
                                 </div>
                                 <div class="col-6 col-sm-2 col-lg-3 col-xl-2">

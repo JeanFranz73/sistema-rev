@@ -4,33 +4,32 @@ import userRoutes from '@/router/userRoutes'
 import orderRoutes from '@/router/orderRoutes'
 import { useSessionStore } from '@/stores'
 
-const dashboardRoutes = [
-    ...userRoutes,
-    ...orderRoutes
-]
-
+const dashboardRoutes = {
+    path: '/painel',
+    name: 'dashboard',
+    meta: { title: 'Painel' },
+    component: () => import('@/views/DashboardView.vue'),
+    children: [
+        ...userRoutes,
+        ...orderRoutes
+    ]
+}
 const authRoutes = [{
     path: '/entrar',
     name: 'login',
-    meta: { title: 'Entrar' },
+    meta: { title: 'Entrar', noAuth: true },
     component: () => import('@/views/LoginView.vue')
 }, {
     path: '/registrar',
     name: 'register',
-    meta: { title: 'Registrar' },
+    meta: { title: 'Registrar', noAuth: true },
     component: () => import('@/views/RegisterView.vue')
 }]
 
 const routes = [
     { path: '/', redirect: '/painel' },
+    dashboardRoutes,
     ...authRoutes,
-    {
-        path: '/painel',
-        name: 'dashboard',
-        meta: { title: 'Painel' },
-        component: () => import('@/views/DashboardView.vue'),
-        children: dashboardRoutes
-    }
 ]
 
 export const router = createRouter({
@@ -46,13 +45,18 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title + ' | Divar Semijoias'
 
     if (!session.isLoggedIn) {
-        if (to.name == 'login' ||
-            to.name == 'register') {
+        if (to.meta.noAuth) {
             next()
         } else {
             next({ name: 'login' })
         }
     } else {
-        next()
+        if (to.meta.noAuth) {
+            next({ name: 'dashboard' }).then(() => {
+                this.$toasts.success('Você já está logado!')
+            })
+        } else {
+            next()
+        }
     }
 })

@@ -8,7 +8,7 @@ import '@fontsource/nunito-sans/900.css'
 
 /* Toast para notificações */
 import VueMyToasts from 'vue-my-toasts'
-import BaseToast from '@/components/toasts/BaseToast.vue'
+import BaseToast from '@/components/BaseToast.vue'
 
 /* Ícones */
 
@@ -20,7 +20,7 @@ import '@iconscout/unicons/css/line.css'
 import FontawesomeIcon from '@/components/icons/FontawesomeIcon.vue'
 import '@fortawesome/fontawesome-free/css/all.css'
 
-export const installIcons = (Vue) => {
+export const initIcons = (Vue) => {
     Vue.use(VueMyToasts, {
         component: BaseToast,
         options: {
@@ -37,9 +37,9 @@ export const installIcons = (Vue) => {
 
 import { Tooltip } from 'bootstrap'
 
-export const tooltipInit = () => {
+export const initTooltips = () => {
     const tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        document.querySelectorAll('[data-toggle="tooltip"]')
     )
 
     tooltipTriggerList.map(
@@ -55,7 +55,7 @@ export const tooltipInit = () => {
 import { Dropdown } from 'bootstrap'
 
 export const dropdownOnHover = () => {
-    const navbarArea = document.querySelector('[data-dropdown-on-hover]')
+    const navbarArea = document.querySelector('[dropdown-hover]')
 
     if (navbarArea) {
         navbarArea.addEventListener('mouseover', e => {
@@ -77,15 +77,5 @@ export const dropdownOnHover = () => {
                 })
             }
         })
-    }
-}
-
-/* Para iniciar após o DOM */
-
-export const docReady = fn => {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', fn)
-    } else {
-        setTimeout(fn, 1)
     }
 }

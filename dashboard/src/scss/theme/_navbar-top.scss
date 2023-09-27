@@ -662,7 +662,7 @@
   }
 }
 
-[data-dropdown-on-hover] {
+[dropdown-hover] {
   .dropdown-menu {
     &::before {
       content: '';

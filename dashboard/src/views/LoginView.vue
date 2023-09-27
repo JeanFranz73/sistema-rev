@@ -1,7 +1,6 @@
 <script>
 import { useSessionStore } from '@/stores'
 import { mapActions } from 'pinia'
-import { RouterLink } from 'vue-router'
 useSessionStore
 export default {
     name: 'LoginView',
@@ -13,20 +12,12 @@ export default {
             keepLogged: false
         }
     }),
-    components: {
-        RouterLink
-    },
     methods: {
         ...mapActions(useSessionStore, ['login', 'setToken']),
-        async doLogin() {
+        doLogin() {
             this.loading = true
-            await this.login(this.form)
+            this.login(this.form)
                 .then((res) => {
-                    if (res.status >= 300) {
-                        console.log('faiou')
-                        this.$toasts.error(res.data.message)
-                        return false
-                    }
                     this.setToken(res.data.token)
                     this.$router.push({ name: 'dashboard' }).then(() => {
                         this.$toasts.success('Login efetuado com sucesso!')
@@ -60,7 +51,7 @@ export default {
                             <label class="form-label" for="username">Nome de usuário</label>
                             <div class="form-icon-container">
                                 <input v-model="form.username" :disabled="loading" class="form-control form-icon-input"
-                                    id="username" placeholder="nomedeusuario" required />
+                                    id="username" placeholder="nomedeusuario" />
                                 <fontawesome-icon icon="user" class="form-icon fs--1" />
                             </div>
                         </div>
@@ -68,7 +59,7 @@ export default {
                             <label class="form-label" for="password">Senha</label>
                             <div class="form-icon-container">
                                 <input v-model="form.password" :disabled="loading" class="form-control form-icon-input"
-                                    id="password" type="password" placeholder="Senha" />
+                                    id="password" type="password" placeholder="Senha" autocomplete />
                                 <fontawesome-icon icon="key" class="form-icon fs--1" />
                             </div>
                         </div>

@@ -14,7 +14,7 @@ export const useSessionStore = defineStore('session', {
         isAdmin(state) {
             return state.user && state.user.role === 1
         },
-        getUser(state) {
+        getLoggedUser(state) {
             return state.user
         },
         getFirstName(state) {
@@ -22,10 +22,14 @@ export const useSessionStore = defineStore('session', {
         }
     },
     actions: {
-        fetch() {
+        async fetch() {
             if (localStorage.getItem('token')) {
-                this.token = JWT.getToken(localStorage.getItem('token'))
-                this.user = JWT.getUser(localStorage.getItem('token'))
+                await api.get('/auth/verify').then((res) => {
+                    this.token = JWT.getToken(localStorage.getItem('token'))
+                    this.user = JWT.getUser(localStorage.getItem('token'))
+                }).catch((err) => {
+                    this.logout()
+                })
                 api.setBearerToken(this.token)
             }
         },

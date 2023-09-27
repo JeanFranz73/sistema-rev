@@ -2,8 +2,8 @@ import db from '@/helpers/db'
 
 class DefaultService<T> {
 
-    table: string
-    db = db
+    private table: string
+    protected db = db
 
     constructor(table: string) {
         this.table = table
@@ -11,7 +11,7 @@ class DefaultService<T> {
 
     findAll() {
         try {
-            const items = db(this.table).select()
+            const items = db<T>(this.table).select()
             return items
         } catch (err) {
             console.error(`Erro ao selecionar itens em ${this.table}: `, err)
@@ -22,6 +22,17 @@ class DefaultService<T> {
     findById(id) {
         try {
             const item = db(this.table).where({ id }).first()
+            return item
+        } catch (err) {
+            console.error(`Erro ao selecionar item em ${this.table}: `, err)
+            throw err
+        }
+    }
+
+    findBy(field, value) {
+        try {
+            console.log('procurando especificamente por campo', field, 'com valor', value)
+            const item = db(this.table).where(field, value).first()
             return item
         } catch (err) {
             console.error(`Erro ao selecionar item em ${this.table}: `, err)

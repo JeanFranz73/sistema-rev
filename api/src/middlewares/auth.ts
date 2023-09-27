@@ -1,14 +1,12 @@
 import config from '@/helpers/config'
 import * as jwt from 'jsonwebtoken'
 
-export const verifyToken = (req, res, next) => {
-    const bearerHeader = req.headers['authorization']
-    if (typeof bearerHeader !== 'undefined') {
+const verify = (token, req, res) => {
+    if (typeof token !== 'undefined') {
         try {
-            const bearerToken = bearerHeader.split(' ')[1]
+            const bearerToken = token.split(' ')[1]
             jwt.verify(bearerToken, config.db.secret)
-            req.token = bearerToken
-            next()
+            return true
         } catch (err) {
             res.status(403).json({
                 message: "Token inválido"
@@ -19,10 +17,18 @@ export const verifyToken = (req, res, next) => {
             message: "Token não especificado"
         })
     }
+    return false
+}
+
+export const verifyToken = (req, res, next) => {
+    const bearerHeader = req.get('authorization')
+    if (verify(bearerHeader, req, res)) {
+        next()
+    }
 }
 
 export const isAdmin = (req, res, next) => {
-    const bearerHeader = req.headers['authorization']
+    const bearerHeader = req.get('authorization')
     if (typeof bearerHeader !== 'undefined') {
         try {
             const bearerToken = bearerHeader.split(' ')[1]

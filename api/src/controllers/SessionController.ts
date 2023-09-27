@@ -2,12 +2,12 @@ import config from "@/helpers/config"
 import * as bcrypt from "bcrypt"
 import { sign } from "jsonwebtoken"
 
-import SessionType from "@/types/Session"
+import Session from "@/types/Session"
 import UserController from "@/controllers/UserController"
 import SessionService from "@/services/SessionService"
 
 class SessionController {
-    async create(login): Promise<SessionType> {
+    async create(login): Promise<Session> {
 
         const { username, password } = login
 
@@ -61,6 +61,11 @@ class SessionController {
         })) {
             return session
         }
+    }
+
+    async find(token): Promise<Session> {
+        let session = await SessionService.findBy('token', token)
+        return session
     }
 }
 

@@ -43,7 +43,7 @@ export default defineToastComponent({
 </script>
 
 <template>
-  <div :class="`alert-snipe-${color}`" class="alert d-flex align-items-center alert-dismissible" role="alert">
+  <div class="alert toast-alert d-flex align-items-center alert-dismissible" :class="`alert-snipe-${color}`" role="alert">
     <i :class="`bi-${icon}`" class="bi me-2"></i>
     <div>{{ message }}</div>
     <button type="button" class="close btn-close" @click="$emit('remove')"></button>
@@ -54,6 +54,13 @@ export default defineToastComponent({
 </template>
 
 <style lang="scss">
+$alert-color: v-bind('color');
+
+.toast-alert {
+  background-image: linear-gradient(to right, var(--snipe-alert-bg), var(--snipe-alert-bg)),
+    linear-gradient(to right, var(--snipe-body-bg), var(--snipe-body-bg));
+}
+
 .progress-bar {
   background: #fff !important;
 }

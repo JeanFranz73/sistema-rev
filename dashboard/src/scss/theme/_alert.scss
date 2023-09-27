@@ -110,7 +110,7 @@ $value in $theme-colors {
 $value in map-remove($theme-colors-300, 'secondary') {
   .alert-snipe-#{$color} {
     &:not(.light) {
-      --#{$prefix}alert-bg: rgba(var(--#{$prefix}#{$color}-rgb), 0.08);
+      --#{$prefix}alert-bg: rgba(var(--#{$prefix}#{$color}-rgb), 0.1);
       --#{$prefix}alert-border-color: rgba(var(--#{$prefix}#{$color}-rgb),
         0.2);
 

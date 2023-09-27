@@ -1,13 +1,14 @@
 <script>
 import api from '@/utils/api'
-import { installAfter } from '@/helpers'
+import { installList } from '@/helpers'
 
 export default {
     name: "UsersPage",
     data: () => ({
         users: [],
         optionsList: {
-            valueNames: ['id', 'name', 'username', 'email', 'phone', 'active'],
+            // item: '<tr><td class="name"></td><td class="username"></td><td class="email"></td><td class="phone"></td><td class="active"></td></tr>',
+            valueNames: ['id', 'name', 'username', 'role', 'email', 'phone', 'active'],
             page: 15,
         }
     }),
@@ -21,10 +22,11 @@ export default {
             await api.get('/users')
                 .then((res) => {
                     this.users = res.data
-                    installAfter()
+                    p = p.replace(/\D+/g, '').replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                    installList()
                 })
-                .catch((error) => {
-                    this.$toasts.error(error.response.data.message)
+                .catch((err) => {
+                    this.$toasts.error(err.response.data.message)
                 })
         },
         goToUserProfile(user) {
@@ -97,9 +99,8 @@ export default {
                         <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
                             <div class="btn-group position-static" role="group">
                                 <div class="btn-group position-static text-nowrap">
-                                    <button class="btn btn-sm btn-phoenix-secondary px-7 flex-shrink-0" type="button"
-                                        data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                        aria-expanded="false" data-bs-reference="parent">
+                                    <button class="btn btn-sm btn-snipe-secondary px-7 flex-shrink-0" type="button"
+                                        data-bs-toggle="dropdown">
                                         Tipo<span class="fas fa-angle-down ms-2"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#">Tipo 1</a></li>
@@ -127,8 +128,11 @@ export default {
                                         Usuário</th>
                                     <th class="sort align-middle pe-5" scope="col" data-sort="email" style="width:20%;">
                                         Email</th>
-                                    <th class="sort align-middle text-end" scope="col" data-sort="phone" style="width:10%">
+                                    <th class="sort align-middle" scope="col" data-sort="phone" style="width:25%">
                                         Telefone
+                                    </th>
+                                    <th class="sort align-middle text-end" scope="col" data-sort="role" style="width:20%;">
+                                        Função
                                     </th>
                                     <th class="sort align-middle text-end ps-3" scope="col" data-sort="active"
                                         style="width:10%">
@@ -136,13 +140,15 @@ export default {
                                 </tr>
                             </thead>
                             <tbody class="list" id="customers-table-body">
-                                <tr v-for="user in users" @click="goToUserProfile(user)" :id="user.id" ref="listItem"
+                                <tr v-for="user in users"
+                                    @click="$router.push({ name: 'user-profile', params: { id: user.username } })"
+                                    :id="user.id" ref="listItem"
                                     class="hover-actions-trigger btn-reveal-trigger position-static" role="button">
-                                    <td class="username align-middle white-space-nowrap pe-5 ps-1">
+                                    <td class="name align-middle white-space-nowrap pe-5 ps-1">
                                         <div class="d-flex align-items-center text-1100">
                                             <div class="avatar avatar-m">
                                                 <div class="avatar-name rounded-circle">
-                                                    <span>{{ user.username.charAt(0) }}</span>
+                                                    <span>{{ user.name.charAt(0) }}</span>
                                                 </div>
                                             </div>
                                             <p class="mb-0 ms-3 text-1100 fw-bold">{{ user.name }}</p>
@@ -154,8 +160,11 @@ export default {
                                     <td class="email align-middle white-space-nowrap pe-5 fw-semi-bold">
                                         <span>{{ user.email }}</span>
                                     </td>
-                                    <td class="phone align-middle white-space-nowrap fw-semi-bold text-end text-1000">
+                                    <td class="phone align-middle white-space-nowrap fw-semi-bold">
                                         <span>{{ user.phone }}</span>
+                                    </td>
+                                    <td class="role align-middle white-space-nowrap text-end fw-semi-bold">
+                                        <span>{{ user.role.name }}</span>
                                     </td>
                                     <td class="active align-middle white-space-nowrap fw-bold text-end ps-3 text-1100 pe-2">
                                         <span>{{ user.active ? 'Ativo' : 'Inativo' }}</span>

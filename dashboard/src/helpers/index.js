@@ -1,21 +1,32 @@
 import feather from 'feather-icons'
 
 import {
-    docReady,
-    tooltipInit,
-    installIcons,
+    initTooltips,
+    initIcons,
     dropdownOnHover
-} from "@/helpers/utils"
-
-import initList from "@/helpers/list"
+} from '@/helpers/utils'
 
 export const installAfter = () => {
     docReady(feather.replace)
     docReady(dropdownOnHover)
-    docReady(tooltipInit)
+    docReady(initTooltips)
+}
+
+/* iniciar listas */
+import initList from '@/helpers/list'
+
+export const installList = () => {
     docReady(initList)
 }
 
 export const installHelpers = (Vue) => {
-    installIcons(Vue)
+    initIcons(Vue)
+}
+
+const docReady = fn => {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fn)
+    } else {
+        setTimeout(fn, 1)
+    }
 }
