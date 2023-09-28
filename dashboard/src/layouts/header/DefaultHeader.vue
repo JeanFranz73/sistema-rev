@@ -53,33 +53,34 @@ export default defineComponent({
         </div>
         <div class="collapse navbar-collapse navbar-top-collapse order-1 order-lg-0 justify-content-center"
             id="navbarTopCollapse">
-            <ul class="navbar-nav navbar-nav-top" dropdown-hover="dropdown-hover">
+            <ul class="navbar-nav navbar-nav-top" dropdown-hover>
                 <li class="nav-item dropdown">
-                    <router-link :to="{ name: 'orders' }" class="nav-link dropdown-toggle lh-1" role="button">
-                        <feather-icon class="fs-0 me-2" icon="shopping-bag" size="16" />
+                    <router-link :to="{ name: 'orders' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
+                        <icones class="fs-0 me-2" type="basket" size="16" />
                         <span>Pedidos</span>
                     </router-link>
                     <ul class="dropdown-menu navbar-dropdown-caret">
                         <li>
                             <router-link class="dropdown-item" :to="{ name: 'orders' }">
-                                <div class="dropdown-item-wrapper">
-                                    <feather-icon class="me-2" icon="shopping-bag" size="16" />
+                                <div class="dropdown-item-wrapper align-items-center">
+                                    <icones class="me-2" type="basket" size="16" />
+
                                     <span>Ver pedidos</span>
                                 </div>
                             </router-link>
                         </li>
                         <li>
                             <router-link class="dropdown-item" :to="{ name: 'new-order' }">
-                                <div class="dropdown-item-wrapper">
-                                    <feather-icon class="me-2" icon="plus-square" size="16" />
+                                <div class="dropdown-item-wrapper align-items-center">
+                                    <icones class="me-2" type="basket-plus" size="16" />
                                     <span>Novo pedido</span>
                                 </div>
                             </router-link>
                         </li>
                         <li>
                             <router-link class="dropdown-item" :to="{ name: 'new-order' }">
-                                <div class=" dropdown-item-wrapper">
-                                    <feather-icon class="me-2" icon="calendar" size="16" />
+                                <div class=" dropdown-item-wrapper align-items-center">
+                                    <icones class="me-2" type="calendar-event" size="16" />
                                     <span>Dias de entrega</span>
                                 </div>
                             </router-link>
@@ -87,31 +88,32 @@ export default defineComponent({
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle lh-1" role="button" data-bs-toggle="dropdown"
-                        data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                        <unicon-icon icon="cube" class="fs-0 me-2" />
+                    <router-link :to="{ name: 'products' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
+                        <icones type="cube" class="fs-0 me-2" />
                         <span>Produtos</span>
-                    </a>
+                    </router-link>
                     <ul class="dropdown-menu navbar-dropdown-caret">
                         <li>
-                            <router-link class="dropdown-item" to="/produtos">
+                            <router-link class="dropdown-item" :to="{ name: 'products' }">
                                 <div class="dropdown-item-wrapper">
-                                    <feather-icon class="me-2" icon="shopping-cart" size="16" />Ver produtos
+                                    <icones class="me-2" type="cube" size="16" />
+                                    <span>Ver produtos</span>
                                 </div>
                             </router-link>
                         </li>
                         <li>
-                            <router-link class="dropdown-item" to="/produtos/novo">
+                            <router-link class="dropdown-item" :to="{ name: 'new-product' }">
                                 <div class="dropdown-item-wrapper">
-                                    <feather-icon class="me-2" icon="clipboard" size="16" />Novo produto
+                                    <icones class="me-2" type="cube-plus" size="16" />
+                                    <span>Novo produto</span>
                                 </div>
                             </router-link>
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li class="nav-item dropdown">
                     <router-link class="nav-link lh-1" :to="{ name: 'users' }">
-                        <feather-icon class=" fs-0 me-2" icon="users" size="16" />
+                        <icones class=" fs-0 me-2" type="users" size="16" />
                         <span>Usuários</span>
                     </router-link>
                 </li>
@@ -123,11 +125,13 @@ export default defineComponent({
                     <input class="form-check-input ms-0 theme-control-toggle-input" type="checkbox" v-model="navTheme"
                         true-value="dark" false-value="light" id="themeControlToggle" />
                     <label class="mb-0 theme-control-toggle-label theme-control-toggle-light" for="themeControlToggle"
-                        data-toggle="tooltip" data-bs-placement="left" title="Alterar para tema claro">
-                        <feather-icon icon="moon" size="16" /></label>
+                        data-bs-toggle="tooltip" desktop-only data-bs-placement="left" title="Alterar para tema claro">
+                        <icones type="moon" size="16" />
+                    </label>
                     <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle"
-                        data-toggle="tooltip" data-bs-placement="left" title="Alterar para tema escuro">
-                        <feather-icon icon="sun" size="16" /></label>
+                        data-bs-toggle="tooltip" desktop-only data-bs-placement="left" title="Alterar para tema escuro">
+                        <icones type="sun" size="16" />
+                    </label>
                 </div>
             </li>
             <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
@@ -151,27 +155,28 @@ export default defineComponent({
                             <ul class="nav d-flex flex-column mb-2 pb-1">
                                 <li class="nav-item">
                                     <a class="nav-link px-3" href="#!">
-                                        <feather-icon icon="user" size="16" class="me-2 text-900" />
+                                        <icones type="user" size="16" class="me-2 text-900" />
                                         <span>Perfil</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link px-3" href="#!">
-                                        <feather-icon icon="pie-chart" size="16" class="me-2 text-900" />
+                                        <icones type="pie-chart" size="16" class="me-2 text-900" />
                                         <span>Dashboard</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link px-3" href="#!">
-                                        <feather-icon icon="settings" size="16" class="me-2 text-900" />
-                                        <span>Configurações</span></a>
+                                        <icones type="settings" size="16" class="me-2 text-900" />
+                                        <span>Configurações</span>
+                                    </a>
                                 </li>
                             </ul>
                         </div>
                         <div class="card-footer p-0">
                             <div class="p-3">
                                 <a class="btn btn-snipe-secondary d-flex flex-center w-100" @click="doLogout">
-                                    <feather-icon size="16" class="me-2" icon="log-out" />
+                                    <icones size="16" class="me-2" type="log-out" />
                                     <span>Sair</span>
                                 </a>
                             </div>

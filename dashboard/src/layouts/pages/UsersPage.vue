@@ -1,32 +1,55 @@
 <script>
 import api from '@/utils/api'
 import { installList } from '@/helpers'
+import { asPhone } from '@/utils/validator'
+
+import List from 'list.js'
 
 export default {
     name: "UsersPage",
     data: () => ({
+        loading: true,
         users: [],
         optionsList: {
-            // item: '<tr><td class="name"></td><td class="username"></td><td class="email"></td><td class="phone"></td><td class="active"></td></tr>',
             valueNames: ['id', 'name', 'username', 'role', 'email', 'phone', 'active'],
-            page: 15,
-        }
+            page: 15
+        },
+        list: null,
+        activeUsers: 0,
     }),
-    computed: {
-        activeUsers() {
-            return this.users.filter(user => user.active)
-        }
-    },
     methods: {
-        async getUsers() {
+        asPhone,
+        showAllUsers() {
+            this.list.filter(() => {
+                return true
+            })
+        },
+        showUsers(activeUsers) {
+            this.list.filter((user) => {
+                return user.values().active == activeUsers
+            })
+        },
+        async init() {
             await api.get('/users')
-                .then((res) => {
+                .then(async (res) => {
                     this.users = res.data
-                    p = p.replace(/\D+/g, '').replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-                    installList()
+
+                    this.users.forEach((user) => {
+                        if (user.active) this.activeUsers++
+                        user = {
+                            ...user,
+                            hidden: false
+                        }
+
+                    })
+
+                    this.loading = false
+
+                    this.list = await installList(this.$refs.usersList, this.optionsList)
+
                 })
                 .catch((err) => {
-                    this.$toasts.error(err.response.data.message)
+                    this.$toasts.error('Não foi possível carregar os usuários.')
                 })
         },
         goToUserProfile(user) {
@@ -38,11 +61,8 @@ export default {
             })
         }
     },
-    beforeMount() {
-        this.optionsList.item = this.$refs.listItem
-    },
     mounted() {
-        this.getUsers()
+        this.init()
     }
 }
 
@@ -63,56 +83,44 @@ export default {
                     <h2 class="mb-0">Usuários</h2>
                 </div>
             </div>
-            <div id="users-list" :data-list="JSON.stringify(optionsList)">
+            <div id="users-list" ref="usersList" :data-list="JSON.stringify(optionsList)">
                 <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
+                        <a class="nav-link active" @click="showAllUsers">
                             <span>Todos </span>
-                            <span class="text-700 fw-semi-bold">(5)</span>
+                            <span class="text-700 fw-semi-bold">({{ users.length }})</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" @click="showUsers(true)">
                             <span>Ativos </span>
-                            <span class="text-700 fw-semi-bold">(3)</span>
+                            <span class="text-700 fw-semi-bold">({{ activeUsers }})</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" @click="showUsers(false)">
                             <span>Inativos </span>
-                            <span class="text-700 fw-semi-bold">(3)</span>
+                            <span class="text-700 fw-semi-bold">({{ (users.length - activeUsers) }})</span>
                         </a>
                     </li>
                 </ul>
                 <div class="mb-4">
                     <div class="row g-3">
-                        <div class="col-auto">
+                        <div class="col-auto flex-grow-1">
                             <div class="search-box">
                                 <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
-                                    <input class="form-control search-input search" type="search"
-                                        placeholder="Pesquisar usuário" aria-label="Pesquisar" />
+                                    <input class="form-control search-input search" :disabled="loading"
+                                        placeholder="Pesquisar usuário" />
                                     <span class="fas fa-search search-box-icon"></span>
 
                                 </form>
                             </div>
                         </div>
-                        <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
-                            <div class="btn-group position-static" role="group">
-                                <div class="btn-group position-static text-nowrap">
-                                    <button class="btn btn-sm btn-snipe-secondary px-7 flex-shrink-0" type="button"
-                                        data-bs-toggle="dropdown">
-                                        Tipo<span class="fas fa-angle-down ms-2"></span></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Tipo 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Tipo 2</a></li>
-                                        <li><a class="dropdown-item" href="#">Tipo 3</a></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-auto">
-                            <button class="btn btn-primary"><span class="fas fa-plus me-2"></span>Adicionar usuário</button>
+                            <button class="btn btn-primary">
+                                <span class="fas fa-plus me-2"></span>
+                                <span>Adicionar usuário</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -140,42 +148,73 @@ export default {
                                 </tr>
                             </thead>
                             <tbody class="list" id="customers-table-body">
-                                <tr v-for="user in users"
-                                    @click="$router.push({ name: 'user-profile', params: { id: user.username } })"
-                                    :id="user.id" ref="listItem"
-                                    class="hover-actions-trigger btn-reveal-trigger position-static" role="button">
+                                <tr v-if="loading"
+                                    class="hover-actions-trigger btn-reveal-trigger position-static user-select-none">
                                     <td class="name align-middle white-space-nowrap pe-5 ps-1">
-                                        <div class="d-flex align-items-center text-1100">
+                                        <div class="d-flex align-items-center placeholder-wave">
                                             <div class="avatar avatar-m">
                                                 <div class="avatar-name rounded-circle">
-                                                    <span>{{ user.name.charAt(0) }}</span>
                                                 </div>
                                             </div>
-                                            <p class="mb-0 ms-3 text-1100 fw-bold">{{ user.name }}</p>
+                                            <p class="mb-0 ms-3 placeholder rounded">Nome de usuário</p>
                                         </div>
                                     </td>
-                                    <td class="username align-middle white-space-nowrap pe-5 fw-semi-bold">
-                                        <span>{{ user.username }}</span>
+                                    <td class="username align-middle white-space-nowrap pe-5 fw-semi-bold placeholder-wave">
+                                        <span class="placeholder rounded">usuario</span>
                                     </td>
                                     <td class="email align-middle white-space-nowrap pe-5 fw-semi-bold">
-                                        <span>{{ user.email }}</span>
+                                        <span class="placeholder rounded">email@usuario.com</span>
                                     </td>
-                                    <td class="phone align-middle white-space-nowrap fw-semi-bold">
-                                        <span>{{ user.phone }}</span>
+                                    <td class="phone align-middle white-space-nowrap pe-5 fw-semi-bold">
+                                        <span class="placeholder rounded">(00) 00000-0000</span>
                                     </td>
                                     <td class="role align-middle white-space-nowrap text-end fw-semi-bold">
-                                        <span>{{ user.role.name }}</span>
+                                        <span class="placeholder rounded">Usuário</span>
                                     </td>
-                                    <td class="active align-middle white-space-nowrap fw-bold text-end ps-3 text-1100 pe-2">
-                                        <span>{{ user.active ? 'Ativo' : 'Inativo' }}</span>
+                                    <td class="active align-middle white-space-nowrap fw-semi-bold text-end ps-3">
+                                        <span class="placeholder rounded">Ativo</span>
                                     </td>
                                 </tr>
+                                <template v-for="user in users">
+                                    <tr v-if="!user.hidden"
+                                        @click="$router.push({ name: 'user-profile', params: { id: user.username } })"
+                                        :id="user.id" ref="usersList" class="position-static">
+                                        <td class="align-middle white-space-nowrap pe-5 ps-1">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar avatar-m">
+                                                    <div class="avatar-name rounded-circle">
+                                                        <span class="name">{{ user.name.charAt(0) }}</span>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 ms-3 text-1100 fw-bold">{{ user.name }}</p>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle white-space-nowrap pe-5 fw-semi-bold">
+                                            <span class="username">{{ user.username }}</span>
+                                        </td>
+                                        <td class="align-middle white-space-nowrap pe-5 fw-semi-bold">
+                                            <span class="email d-none">{{ user.email }}</span>
+                                            <span>{{ user.email }}</span>
+                                        </td>
+                                        <td class="align-middle white-space-nowrap fw-semi-bold">
+                                            <span class="phone d-none">{{ user.phone }}</span>
+                                            <span>{{ asPhone(user.phone) }}</span>
+                                        </td>
+                                        <td class="align-middle white-space-nowrap text-end fw-semi-bold">
+                                            <span class="role">{{ user.role.name }}</span>
+                                        </td>
+                                        <td class="align-middle white-space-nowrap fw-semi-bold text-end ps-3 pe-2">
+                                            <span class="active d-none">{{ user.active }}</span>
+                                            <span>{{ user.active ? 'Ativo' : 'Inativo' }}</span>
+                                        </td>
+                                    </tr>
+                                </template>
                             </tbody>
                         </table>
                     </div>
                     <div class="row align-items-center justify-content-between py-2 pe-0 fs--1">
                         <div class="col-auto d-flex">
-                            <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900" data-list-info="data-list-info">
+                            <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900" data-list-info>
                             </p>
                             <a class="fw-semi-bold" data-list-view="*">Ver todos
                                 <span class="fas fa-angle-right ms-1" data-fa-transform="down-1">
@@ -186,11 +225,13 @@ export default {
                             </a>
                         </div>
                         <div class="col-auto d-flex">
-                            <button class="page-link" data-list-pagination="prev"><span
-                                    class="fas fa-chevron-left"></span></button>
+                            <button class="page-link" data-list-pagination="prev">
+                                <span class="fas fa-chevron-left"></span>
+                            </button>
                             <ul class="mb-0 pagination"></ul>
-                            <button class="page-link pe-0" data-list-pagination="next"><span
-                                    class="fas fa-chevron-right"></span></button>
+                            <button class="page-link pe-0" data-list-pagination="next">
+                                <span class="fas fa-chevron-right"></span>
+                            </button>
                         </div>
                     </div>
                 </div>

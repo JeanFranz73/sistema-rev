@@ -1,8 +1,7 @@
 import axios from 'axios'
-import { debugApi } from '@/utils/debug'
 
 const api = axios.create({
-    baseURL: `http://localhost:8000`,
+    baseURL: `http://${location.hostname}:8000`,
     'Content-Type': 'application/json',
     Accept: 'application/json',
     timeout: 5000

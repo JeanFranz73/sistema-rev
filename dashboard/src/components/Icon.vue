@@ -1,8 +1,12 @@
 <script>
+import { Icon } from '@iconify/vue'
 export default {
-    name: 'FeatherIcon',
+    name: 'Icones',
+    components: {
+        Icon
+    },
     props: {
-        icon: {
+        type: {
             type: String,
             required: true
         },
@@ -13,12 +17,12 @@ export default {
     },
     computed: {
         iconData() {
-            return this.icon
+            return `tabler:${this.type}`
         }
     },
 }
 </script>
 
 <template>
-    <i :data-feather="iconData" :width="size" :height="size"></i>
+    <Icon :icon="iconData" :width="size" :height="size" />
 </template>

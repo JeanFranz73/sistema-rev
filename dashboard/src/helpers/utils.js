@@ -12,13 +12,7 @@ import BaseToast from '@/components/BaseToast.vue'
 
 /* Ícones */
 
-import FeatherIcon from '@/components/icons/FeatherIcon.vue'
-
-import UniconIcon from '@/components/icons/UniconIcon.vue'
-import '@iconscout/unicons/css/line.css'
-
-import FontawesomeIcon from '@/components/icons/FontawesomeIcon.vue'
-import '@fortawesome/fontawesome-free/css/all.css'
+import Icon from '@/components/Icon.vue'
 
 export const initIcons = (Vue) => {
     Vue.use(VueMyToasts, {
@@ -28,9 +22,7 @@ export const initIcons = (Vue) => {
             duration: 500000
         }
     })
-    Vue.component(FeatherIcon.name, FeatherIcon)
-    Vue.component(UniconIcon.name, UniconIcon)
-    Vue.component(FontawesomeIcon.name, FontawesomeIcon)
+    Vue.component(Icon.name, Icon)
 }
 
 /* Tooltips */
@@ -39,14 +31,16 @@ import { Tooltip } from 'bootstrap'
 
 export const initTooltips = () => {
     const tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-toggle="tooltip"]')
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
     )
 
     tooltipTriggerList.map(
-        tooltipTriggerEl =>
+        tooltipTriggerEl => {
+            if (tooltipTriggerEl.hasAttribute('desktop-only') && ('ontouchstart' in window)) return
             new Tooltip(tooltipTriggerEl, {
                 trigger: 'hover'
             })
+        }
     )
 }
 
@@ -54,15 +48,19 @@ export const initTooltips = () => {
 
 import { Dropdown } from 'bootstrap'
 
+const isDesktop = () => window.innerWidth > 992
+
 export const dropdownOnHover = () => {
     const navbarArea = document.querySelector('[dropdown-hover]')
 
     if (navbarArea) {
         navbarArea.addEventListener('mouseover', e => {
+            // console.log(e.target?.className?.includes('dropdown-icon'))
+            console.log(e.target)
             if (
-                e.target?.className?.includes('dropdown-toggle') &&
-                !e.target.parentNode.className.includes('dropdown-inside') &&
-                window.innerWidth > 992
+                    // e.target?.className?.includes('dropdown-toggle') &&
+                    // !e.target.parentNode.className.includes('dropdown-inside') &&
+                isDesktop
             ) {
                 const dropdownInstance = Dropdown.getOrCreateInstance(e.target)
 
@@ -71,7 +69,7 @@ export const dropdownOnHover = () => {
                 dropdownInstance._menu.setAttribute('data-bs-popper', 'none')
 
                 e.target.parentNode.addEventListener('mouseleave', () => {
-                    if (window.innerWidth > 992) {
+                    if (isDesktop) {
                         dropdownInstance.hide()
                     }
                 })

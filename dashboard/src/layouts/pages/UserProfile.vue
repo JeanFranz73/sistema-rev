@@ -1,5 +1,7 @@
 <script>
 import api from '@/utils/api'
+import { asPhone } from '@/utils/validator'
+import { installList } from '@/helpers'
 
 export default {
     data: () => ({
@@ -15,17 +17,24 @@ export default {
             { order_id: 2445, status: 4, date: '19/10/2023', total: 4116 }
         ],
         user: {
-            initial: 'U',
+            initial: '',
             name: 'Nome de usuário',
+            phone: '00000000000',
             username: 'usuario',
-            image: undefined
+            image: null,
+            active: true
         },
-        ordersList: {
+        ordersOptions: {
             valueNames: ['id', 'status', 'date', 'total'],
             page: 5,
         },
+        odersList: null,
     }),
     methods: {
+        asPhone,
+        displayIcon(status) {
+            return status ? 'user-minus' : 'user-check'
+        },
         getPedidoStatus(status) {
             switch (status) {
                 case 1:
@@ -39,7 +48,7 @@ export default {
                     return {
                         desc: 'Em preparação',
                         badge: 'info',
-                        icon: 'info'
+                        icon: 'info-circle'
                     }
                     break
                 case 4:
@@ -60,7 +69,7 @@ export default {
                     return {
                         desc: 'Devolvido',
                         badge: 'info',
-                        icon: 'corner-up-left'
+                        icon: 'arrow-back-up'
                     }
                     break
             }
@@ -73,14 +82,14 @@ export default {
                         initial: res.data.name.charAt(0),
                         image: res.data.image ? res.data.image : undefined
                     }
-                }).catch((err) => {
-                    this.$toasts.error(err.response.data.message)
-                }).finally(() => {
+                    installList(this.$refs.profileOrdersTable, this.ordersOptions)
                     this.loading = false
+                }).catch((err) => {
+                    this.$toasts.error('Não foi possível carregar o usuário.')
                 })
         }
     },
-    beforeMount() {
+    mounted() {
         this.getUser()
     }
 }
@@ -103,11 +112,11 @@ export default {
             <h2 class="mb-0">Perfil</h2>
         </div>
         <div class="col-auto">
-            <div class="row g-2 g-sm-3">
+            <div class="row g-2">
                 <div class="col-auto">
-                    <button class="btn btn-snipe-danger">
-                        <fontawesome-icon icon="trash-alt" class="me-2" />
-                        <span>Inativar usuário</span>
+                    <button :class="`btn-snipe-${user.active ? 'danger' : 'primary'}`" class="btn">
+                        <icones type="user-minus" class="me-2" size="13" />
+                        <span>Desativar</span>
                     </button>
                 </div>
                 <div class="col-auto">
@@ -135,10 +144,10 @@ export default {
                             </div>
                             <div class="col-12 col-sm-auto flex-1 placeholder-wave">
                                 <h3>
-                                    <span :class="loading ? 'placeholder placeholder-lg rounded w-50' : ''">{{ user.name
+                                    <span :class="loading ? 'placeholder rounded' : ''">{{ user.name
                                     }}</span>
                                 </h3>
-                                <p :class="loading ? 'placeholder placeholder-lg rounded w-25' : ''" class="text-800">{{
+                                <p :class="loading ? 'placeholder rounded' : ''" class="text-800">{{
                                     user.username }}</p>
                             </div>
                         </div>
@@ -195,7 +204,8 @@ export default {
                             </div>
                             <div class="col-auto">
                                 <a class="lh-1 placeholder-wave">
-                                    <span :class="loading ? 'placeholder rounded w-100' : ''">{{ user.phone }}</span>
+                                    <span :class="loading ? 'placeholder rounded w-100' : ''">{{ asPhone(user.phone)
+                                    }}</span>
                                 </a>
                             </div>
                         </div>
@@ -225,8 +235,7 @@ export default {
         </div>
         <div class="tab-content" id="profileTabContent">
             <div class="tab-pane fade show active" id="user-orders">
-                <div class="border-top border-bottom border-200" id="profileOrdersTable"
-                    :data-list="JSON.stringify(ordersList)">
+                <div class="border-top border-bottom border-200" ref="profileOrdersTable" id="profile-orders">
                     <div class="table-responsive scrollbar">
                         <table class="table fs--1 mb-0">
                             <thead>
@@ -244,7 +253,7 @@ export default {
                                 </tr>
                             </thead>
                             <tbody class="list" id="profile-order-table-body">
-                                <tr v-for=" pedido  in  pedidos " :key="pedido.id"
+                                <tr v-for="pedido in pedidos" :key="pedido.id"
                                     class="hover-actions-trigger btn-reveal-trigger position-static">
                                     <td class="order align-middle white-space-nowrap py-2 ps-0">
                                         <router-link class="fw-semi-bold text-primary"
@@ -254,8 +263,7 @@ export default {
                                         <span class="badge badge-snipe fs--2"
                                             :class="`badge-snipe-${getPedidoStatus(pedido.status).badge}`">
                                             <span class="badge-label">{{ getPedidoStatus(pedido.status).desc }}</span>
-                                            <feather-icon class="ms-1" :icon="getPedidoStatus(pedido.status).icon"
-                                                size="12.8" />
+                                            <icones class="ms-1" :type="getPedidoStatus(pedido.status).icon" size="12.8" />
                                         </span>
                                     </td>
                                     <td class="date align-middle text-700 text-end py-2">{{ pedido.date }}</td>
@@ -273,10 +281,14 @@ export default {
                                 data-list-view="less">Ver
                                 menos<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
                         </div>
-                        <div class="col-auto d-flex"><button class="page-link" data-list-pagination="prev"><span
-                                    class="fas fa-chevron-left"></span></button>
-                            <ul class="mb-0 pagination"></ul><button class="page-link pe-0"
-                                data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+                        <div class="col-auto d-flex">
+                            <button class="page-link" data-list-pagination="prev">
+                                <span class="fas fa-chevron-left"></span>
+                            </button>
+                            <ul class="mb-0 pagination"></ul>
+                            <button class="page-link pe-0" data-list-pagination="next">
+                                <span class="fas fa-chevron-right"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
