@@ -24,7 +24,7 @@ export default {
                 return true
             })
         },
-        showUsers(activeUsers) {
+        showActiveUsers(activeUsers) {
             this.list.filter((user) => {
                 return user.values().active == activeUsers
             })
@@ -92,13 +92,13 @@ export default {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" @click="showUsers(true)">
+                        <a class="nav-link" @click="showActiveUsers(true)">
                             <span>Ativos </span>
                             <span class="text-700 fw-semi-bold">({{ activeUsers }})</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" @click="showUsers(false)">
+                        <a class="nav-link" @click="showActiveUsers(false)">
                             <span>Inativos </span>
                             <span class="text-700 fw-semi-bold">({{ (users.length - activeUsers) }})</span>
                         </a>
@@ -118,8 +118,8 @@ export default {
                         </div>
                         <div class="col-auto">
                             <button class="btn btn-primary">
-                                <span class="fas fa-plus me-2"></span>
-                                <span>Adicionar usuário</span>
+                                <icones type="user-plus" class="me-2" size="16" />
+                                Adicionar usuário
                             </button>
                         </div>
                     </div>
@@ -150,13 +150,13 @@ export default {
                             <tbody class="list" id="customers-table-body">
                                 <tr v-if="loading"
                                     class="hover-actions-trigger btn-reveal-trigger position-static user-select-none">
-                                    <td class="name align-middle white-space-nowrap pe-5 ps-1">
+                                    <td class="align-middle white-space-nowrap pe-5 ps-1">
                                         <div class="d-flex align-items-center placeholder-wave">
                                             <div class="avatar avatar-m">
                                                 <div class="avatar-name rounded-circle">
                                                 </div>
                                             </div>
-                                            <p class="mb-0 ms-3 placeholder rounded">Nome de usuário</p>
+                                            <p class="name mb-0 ms-3 placeholder rounded">Nome de usuário</p>
                                         </div>
                                     </td>
                                     <td class="username align-middle white-space-nowrap pe-5 fw-semi-bold placeholder-wave">
@@ -183,10 +183,10 @@ export default {
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar avatar-m">
                                                     <div class="avatar-name rounded-circle">
-                                                        <span class="name">{{ user.name.charAt(0) }}</span>
+                                                        <span>{{ user.name.charAt(0) }}</span>
                                                     </div>
                                                 </div>
-                                                <p class="mb-0 ms-3 text-1100 fw-bold">{{ user.name }}</p>
+                                                <p class="name mb-0 ms-3 text-1100 fw-bold">{{ user.name }}</p>
                                             </div>
                                         </td>
                                         <td class="align-middle white-space-nowrap pe-5 fw-semi-bold">
@@ -216,21 +216,22 @@ export default {
                         <div class="col-auto d-flex">
                             <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900" data-list-info>
                             </p>
-                            <a class="fw-semi-bold" data-list-view="*">Ver todos
-                                <span class="fas fa-angle-right ms-1" data-fa-transform="down-1">
-                                </span>
+                            <a class="fw-semi-bold" data-list-view="*">
+                                <span>Ver todos</span>
+                                <icones type="chevron-right" class="ms-1" />
                             </a>
-                            <a class="fw-semi-bold d-none" data-list-view="less">Ver menos
-                                <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+                            <a class="fw-semi-bold d-none" data-list-view="less">
+                                <span>Ver menos</span>
+                                <icones type="chevron-right" class="ms-1" />
                             </a>
                         </div>
                         <div class="col-auto d-flex">
                             <button class="page-link" data-list-pagination="prev">
-                                <span class="fas fa-chevron-left"></span>
+                                <icones type="chevron-left" />
                             </button>
                             <ul class="mb-0 pagination"></ul>
                             <button class="page-link pe-0" data-list-pagination="next">
-                                <span class="fas fa-chevron-right"></span>
+                                <icones type="chevron-right" />
                             </button>
                         </div>
                     </div>
