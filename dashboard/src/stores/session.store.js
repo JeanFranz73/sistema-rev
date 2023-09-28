@@ -23,31 +23,30 @@ export const useSessionStore = defineStore('session', {
     },
     actions: {
         async fetch() {
-            if (localStorage.getItem('token')) {
-                await api.get('/auth/verify').then((res) => {
-                    this.token = JWT.getToken(localStorage.getItem('token'))
-                    this.user = JWT.getUser(localStorage.getItem('token'))
-                }).catch((err) => {
-                    this.logout()
-                })
-                api.setBearerToken(this.token)
+            let token = localStorage.getItem('token')
+            if (token) {
+                //     this.setToken(token)
+                //     await api.get('/auth/verify').then((res) => {
+                this.token = JWT.getToken(token)
+                this.user = JWT.getUser(token)
+                //     }).catch((err) => {
+                //         this.logout()
+                //         return
+                //     })
             }
         },
         async login(login) {
-            const { username, password } = login
-
-            return await api.post('/auth', { username, password })
+            return await api.post('/auth', login).then(async (res) => {
+                await this.setToken(res.data.token)
+            })
         },
-        logout() {
-            this.token = ''
+        async logout() {
             localStorage.removeItem('token')
+            return this.$reset()
         },
-        updateUser(user) {
-            this.user = user
-        },
-        setToken(token) {
-            localStorage.setItem('token', token)
+        async setToken(token) {
             api.setBearerToken(token)
+            localStorage.setItem('token', token)
             this.fetch()
         }
     }
