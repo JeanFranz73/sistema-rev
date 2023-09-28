@@ -14,11 +14,10 @@ export default {
     }),
     methods: {
         ...mapActions(useSessionStore, ['login', 'setToken']),
-        doLogin() {
+        async doLogin() {
             this.loading = true
-            this.login(this.form)
-                .then((res) => {
-                    this.setToken(res.data.token)
+            await this.login(this.form)
+                .then(() => {
                     this.$router.push({ name: 'dashboard' }).then(() => {
                         this.$toasts.success('Login efetuado com sucesso!')
                     })
@@ -56,7 +55,7 @@ export default {
                             <div class="form-icon-container">
                                 <input v-model="form.username" :disabled="loading" class="form-control form-icon-input"
                                     id="username" placeholder="nomedeusuario" />
-                                <fontawesome-icon icon="user" class="form-icon fs--1" />
+                                <icones type="user" class="form-icon fs--1" />
                             </div>
                         </div>
                         <div class="mb-3 text-start">
@@ -64,7 +63,7 @@ export default {
                             <div class="form-icon-container">
                                 <input v-model="form.password" :disabled="loading" class="form-control form-icon-input"
                                     id="password" type="password" placeholder="Senha" autocomplete />
-                                <fontawesome-icon icon="key" class="form-icon fs--1" />
+                                <icones type="key" class="form-icon fs--1" />
                             </div>
                         </div>
                         <div class="row flex-between-center mb-3">
