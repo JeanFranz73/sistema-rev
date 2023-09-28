@@ -23,7 +23,11 @@ export default {
                         this.$toasts.success('Login efetuado com sucesso!')
                     })
                 }).catch((error) => {
-                    this.$toasts.error(error.response.data.message)
+                    if (error.response)
+                        this.$toasts.error(error.response.data.message)
+                    else {
+                        this.$toasts.error('Não foi possível realizar login')
+                    }
                 }).finally(() => {
                     this.loading = false
                 })
