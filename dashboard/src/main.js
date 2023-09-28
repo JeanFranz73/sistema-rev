@@ -1,7 +1,7 @@
 import '@/scss/theme.scss'
 import 'bootstrap'
+
 import { installHelpers } from '@/helpers'
-import '@/helpers'
 import { installStores } from '@/stores'
 
 import { createApp } from 'vue'
