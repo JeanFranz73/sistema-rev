@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { installAfter } from '@/helpers'
-import userRoutes from '@/router/userRoutes'
-import orderRoutes from '@/router/orderRoutes'
 import { useSessionStore } from '@/stores'
+import { installAfter } from '@/helpers'
+import authRoutes from '@/router/auth.routes'
+import userRoutes from '@/router/admin/user.routes'
+import orderRoutes from '@/router/admin/order.routes'
+import productRoutes from '@/router/admin/product.routes'
 
 const dashboardRoutes = {
     path: '/painel',
@@ -11,29 +13,20 @@ const dashboardRoutes = {
     component: () => import('@/views/DashboardView.vue'),
     children: [
         ...userRoutes,
-        ...orderRoutes
+        ...orderRoutes,
+        ...productRoutes
     ]
 }
-const authRoutes = [{
-    path: '/entrar',
-    name: 'login',
-    meta: { title: 'Entrar', noAuth: true },
-    component: () => import('@/views/LoginView.vue')
-}, {
-    path: '/registrar',
-    name: 'register',
-    meta: { title: 'Registrar', noAuth: true },
-    component: () => import('@/views/RegisterView.vue')
-}]
 
 const routes = [
-    { path: '/', redirect: '/painel' },
+    { path: '/', redirect: { name: 'dashboard' } },
     dashboardRoutes,
     ...authRoutes,
 ]
 
 export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
+    linkActiveClass: "active",
     routes
 })
 
