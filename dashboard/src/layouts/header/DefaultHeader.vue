@@ -19,10 +19,11 @@ export default defineComponent({
     methods: {
         ...mapActions(useConfigStore, ['setTheme']),
         ...mapActions(useSessionStore, ['logout']),
-        doLogout() {
-            this.logout()
-            this.$router.push('/login').then(() => {
-                this.$toasts.success('Logout efetuado com sucesso!')
+        async doLogout() {
+            await this.logout().then(() => {
+                this.$router.push('/login').then(() => {
+                    this.$toasts.success('Logout efetuado com sucesso!')
+                })
             })
         }
     },
@@ -112,10 +113,28 @@ export default defineComponent({
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <router-link class="nav-link lh-1" :to="{ name: 'users' }">
+                    <router-link :to="{ name: 'users' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
                         <icones class=" fs-0 me-2" type="users" size="16" />
                         <span>Usuários</span>
                     </router-link>
+                    <ul class="dropdown-menu navbar-dropdown-caret">
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'users' }">
+                                <div class="dropdown-item-wrapper">
+                                    <icones class="me-2" type="users" size="16" />
+                                    <span>Ver usuários</span>
+                                </div>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'new-user' }">
+                                <div class="dropdown-item-wrapper">
+                                    <icones class="me-2" type="user-plus" size="16" />
+                                    <span>Novo usuário</span>
+                                </div>
+                            </router-link>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -161,7 +180,7 @@ export default defineComponent({
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link px-3" href="#!">
-                                        <icones type="pie-chart" size="16" class="me-2 text-900" />
+                                        <icones type="chart-line" size="16" class="me-2 text-900" />
                                         <span>Dashboard</span>
                                     </a>
                                 </li>
@@ -176,8 +195,8 @@ export default defineComponent({
                         <div class="card-footer p-0">
                             <div class="p-3">
                                 <a class="btn btn-snipe-secondary d-flex flex-center w-100" @click="doLogout">
-                                    <icones size="16" class="me-2" type="log-out" />
-                                    <span>Sair</span>
+                                    <icones size="16" class="me-2" type="logout-2" />
+                                    <span class="h-auto">Sair</span>
                                 </a>
                             </div>
                         </div>
