@@ -25,14 +25,8 @@ export const useSessionStore = defineStore('session', {
         async fetch() {
             let token = localStorage.getItem('token')
             if (token) {
-                //     this.setToken(token)
-                //     await api.get('/auth/verify').then((res) => {
                 this.token = JWT.getToken(token)
                 this.user = JWT.getUser(token)
-                //     }).catch((err) => {
-                //         this.logout()
-                //         return
-                //     })
             }
         },
         async login(login) {

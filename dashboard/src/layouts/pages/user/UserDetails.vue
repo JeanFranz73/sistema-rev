@@ -4,6 +4,7 @@ import { asPhone } from '@/utils/validator'
 import { installList } from '@/helpers'
 
 export default {
+    name: 'UserDetails',
     data: () => ({
         loading: true,
         pedidos: [
@@ -121,8 +122,8 @@ export default {
                 </div>
                 <div class="col-auto">
                     <button class="btn btn-snipe-secondary">
-                        <fontawesome-icon icon="key" class="me-2" />
-                        <span>Resetar Senha</span>
+                        <icones type="key" class="me-2" />
+                        <span>Redefinir Senha</span>
                     </button>
                 </div>
             </div>
@@ -219,7 +220,7 @@ export default {
             <ul class="nav nav-underline flex-nowrap mb-3 pb-1" id="myTab" role="tablist">
                 <li class="nav-item me-3">
                     <a class="nav-link text-nowrap active" id="orders-tab" data-bs-toggle="tab" href="#user-orders">
-                        <fontawesome-icon icon="shopping-cart" class="me-2" />
+                        <icones type="shopping-cart" class="me-2" />
                         <span class="me-1">Pedidos</span>
                         <span class="text-700 fw-normal">(8)</span>
                     </a>
@@ -227,7 +228,7 @@ export default {
                 <li class="nav-item">
                     <a class="nav-link text-nowrap" id="personal-info-tab" data-bs-toggle="tab" href="#user-info"
                         role="tab">
-                        <fontawesome-icon icon="user" class="me-2" />
+                        <icones type="user" class="me-2" />
                         <span class="me-1">Informações pessoais</span>
                     </a>
                 </li>

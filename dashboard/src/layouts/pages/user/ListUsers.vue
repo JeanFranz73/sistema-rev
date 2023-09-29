@@ -6,7 +6,7 @@ import { asPhone } from '@/utils/validator'
 import List from 'list.js'
 
 export default {
-    name: "UsersPage",
+    name: "ListUsers",
     data: () => ({
         loading: true,
         users: [],
@@ -16,15 +16,18 @@ export default {
         },
         list: null,
         activeUsers: 0,
+        usersFilter: 'all'
     }),
     methods: {
         asPhone,
         showAllUsers() {
+            this.usersFilter = 'all'
             this.list.filter(() => {
                 return true
             })
         },
         showActiveUsers(activeUsers) {
+            this.usersFilter = activeUsers ? 'active' : 'inactive'
             this.list.filter((user) => {
                 return user.values().active == activeUsers
             })
@@ -37,8 +40,7 @@ export default {
                     this.users.forEach((user) => {
                         if (user.active) this.activeUsers++
                         user = {
-                            ...user,
-                            hidden: false
+                            ...user
                         }
 
                     })
@@ -84,21 +86,22 @@ export default {
                 </div>
             </div>
             <div id="users-list" ref="usersList" :data-list="JSON.stringify(optionsList)">
-                <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
+                <ul class="nav nav-links mb-3 mb-lg-2 mx-n3 user-select-none">
                     <li class="nav-item">
-                        <a class="nav-link active" @click="showAllUsers">
+                        <a class="nav-link" :class="usersFilter == 'all' ? 'active' : ''" @click="showAllUsers">
                             <span>Todos </span>
                             <span class="text-700 fw-semi-bold">({{ users.length }})</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" @click="showActiveUsers(true)">
+                        <a class="nav-link" :class="usersFilter == 'active' ? 'active' : ''" @click="showActiveUsers(true)">
                             <span>Ativos </span>
                             <span class="text-700 fw-semi-bold">({{ activeUsers }})</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" @click="showActiveUsers(false)">
+                        <a class="nav-link" :class="usersFilter == 'inactive' ? 'active' : ''"
+                            @click="showActiveUsers(false)">
                             <span>Inativos </span>
                             <span class="text-700 fw-semi-bold">({{ (users.length - activeUsers) }})</span>
                         </a>
@@ -111,8 +114,7 @@ export default {
                                 <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
                                     <input class="form-control search-input search" :disabled="loading"
                                         placeholder="Pesquisar usuário" />
-                                    <span class="fas fa-search search-box-icon"></span>
-
+                                    <icones type="user-search" class="search-box-icon" />
                                 </form>
                             </div>
                         </div>
@@ -176,8 +178,7 @@ export default {
                                     </td>
                                 </tr>
                                 <template v-for="user in users">
-                                    <tr v-if="!user.hidden"
-                                        @click="$router.push({ name: 'user-profile', params: { id: user.username } })"
+                                    <tr @click="$router.push({ name: 'user-profile', params: { id: user.username } })"
                                         :id="user.id" ref="usersList" class="position-static">
                                         <td class="align-middle white-space-nowrap pe-5 ps-1">
                                             <div class="d-flex align-items-center">

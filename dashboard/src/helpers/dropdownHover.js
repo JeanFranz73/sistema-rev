@@ -1,27 +1,36 @@
 import { Dropdown } from 'bootstrap'
 
-const isDesktop = () => window.innerWidth > 992
+const isDesktop = () => (window.innerWidth > 992)
 
 export const dropdownOnHover = () => {
-    const navbarArea = document.querySelector('[dropdown-hover]')
+    if (isDesktop()) {
+        const hoverDropdowns = document.querySelectorAll('[dropdown-hover]')
 
-    if (navbarArea) {
-        navbarArea.addEventListener('mouseover', e => {
-            if (
-                e.target?.className?.includes('dropdown-toggle') &&
-                // !e.target.parentNode.className.includes('dropdown-inside') &&
-                isDesktop
-            ) {
-                const dropdownInstance = Dropdown.getOrCreateInstance(e.target)
+        hoverDropdowns.forEach(dropdown => {
+            const dropdownButton = dropdown.querySelector('.dropdown-toggle')
+            const dropdownInstance = Dropdown.getOrCreateInstance(dropdownButton)
 
-                dropdownInstance._element.classList.add('show')
-                dropdownInstance._menu.classList.add('show')
-                dropdownInstance._menu.setAttribute('data-bs-popper', 'none')
+            if (!dropdownButton.hasAttribute('enabled')) {
+                dropdownButton.setAttribute('enabled', true)
 
-                e.target.parentNode.addEventListener('mouseleave', () => {
-                    if (isDesktop) {
-                        dropdownInstance.hide()
+                dropdown.addEventListener('mouseover', () => {
+                    if (isDesktop()) {
+                        dropdownInstance.show()
+                        dropdownInstance._menu.addEventListener('mouseleave', () => {
+                            dropdownInstance.hide()
+                        })
+                        dropdownButton.addEventListener('mouseleave', () => {
+                            dropdownInstance.hide()
+                        })
                     }
+                })
+
+                const dropdownItems = dropdown.querySelectorAll('.dropdown-item')
+
+                dropdownItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        dropdownInstance.hide()
+                    })
                 })
             }
         })

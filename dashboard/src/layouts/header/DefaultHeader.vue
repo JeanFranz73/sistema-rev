@@ -3,6 +3,7 @@ import { defineComponent } from 'vue'
 
 import { useConfigStore, useSessionStore } from '@/stores'
 import { mapState, mapActions } from 'pinia'
+import { isDesktop } from '@/helpers'
 
 export default defineComponent({
     name: 'DefaultHeader',
@@ -27,23 +28,36 @@ export default defineComponent({
             })
         }
     },
-    mounted() {
-        this.navTheme = this.getTheme
-    },
     watch: {
         navTheme(val) {
             this.setTheme(val)
         }
-    }
+    },
+    mounted() {
+        this.navTheme = this.getTheme
+        if (!isDesktop) {
+            this.$refs.defaultHeaderNav.querySelectorAll('.navbar-dropdown-caret > li').forEach((item) => {
+                item.addEventListener('click', () => {
+                    this.$refs.defaultHeaderNav.querySelector('.navbar-toggler').click()
+                    this.$refs.defaultHeaderNav.querySelectorAll('.dropdown').forEach((dropdown) => {
+                        dropdown.hide()
+                    })
+                })
+            })
+        }
+    },
 })
 </script>
 
 <template>
-    <nav class="navbar navbar-top fixed-top navbar-expand-lg" id="navbarTop">
+    <nav class="navbar navbar-top fixed-top navbar-expand-lg" id="navbarTop" ref="defaultHeaderNav">
         <div class="navbar-logo">
-            <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbarTopCollapse">
-                <span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+            <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" data-bs-toggle="collapse"
+                data-bs-target="#navbarTopCollapse">
+                <span class="navbar-toggle-icon">
+                    <span class="toggle-line"></span>
+                </span>
+            </button>
             <router-link :to="{ name: 'dashboard' }" class="navbar-brand me-1 me-sm-3">
                 <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center">
@@ -54,8 +68,8 @@ export default defineComponent({
         </div>
         <div class="collapse navbar-collapse navbar-top-collapse order-1 order-lg-0 justify-content-center"
             id="navbarTopCollapse">
-            <ul class="navbar-nav navbar-nav-top" dropdown-hover>
-                <li class="nav-item dropdown">
+            <ul class="navbar-nav navbar-nav-top">
+                <li class="nav-item dropdown" dropdown-hover>
                     <router-link :to="{ name: 'orders' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
                         <icones class="fs-0 me-2" type="basket" size="16" />
                         <span>Pedidos</span>
@@ -65,7 +79,6 @@ export default defineComponent({
                             <router-link class="dropdown-item" :to="{ name: 'orders' }">
                                 <div class="dropdown-item-wrapper align-items-center">
                                     <icones class="me-2" type="basket" size="16" />
-
                                     <span>Ver pedidos</span>
                                 </div>
                             </router-link>
@@ -88,7 +101,7 @@ export default defineComponent({
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" dropdown-hover>
                     <router-link :to="{ name: 'products' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
                         <icones type="cube" class="fs-0 me-2" />
                         <span>Produtos</span>
@@ -112,7 +125,7 @@ export default defineComponent({
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" dropdown-hover>
                     <router-link :to="{ name: 'users' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
                         <icones class=" fs-0 me-2" type="users" size="16" />
                         <span>Usuários</span>
@@ -180,7 +193,7 @@ export default defineComponent({
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link px-3" href="#!">
-                                        <icones type="chart-line" size="16" class="me-2 text-900" />
+                                        <icones type="chart-bar" size="16" class="me-2 text-900" />
                                         <span>Dashboard</span>
                                     </a>
                                 </li>
