@@ -2,13 +2,14 @@
 import api from '@/utils/api'
 import { installList } from '@/helpers'
 import { asPhone } from '@/utils/validator'
+import { getAvatar } from '@/helpers'
 
-import List from 'list.js'
 
 export default {
     name: "ListUsers",
     data: () => ({
         loading: true,
+        getAvatar,
         users: [],
         optionsList: {
             valueNames: ['id', 'name', 'username', 'role', 'email', 'phone', 'active'],
@@ -183,7 +184,9 @@ export default {
                                         <td class="align-middle white-space-nowrap pe-5 ps-1">
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar avatar-m">
-                                                    <div class="avatar-name rounded-circle">
+                                                    <img v-if="!user.noAvatar" class="rounded-circle"
+                                                        :src="getAvatar(user.email, 32)" @error="user.noAvatar = true" />
+                                                    <div v-else class="avatar-name rounded-circle">
                                                         <span>{{ user.name.charAt(0) }}</span>
                                                     </div>
                                                 </div>

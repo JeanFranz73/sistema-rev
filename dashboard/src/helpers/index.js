@@ -2,13 +2,12 @@ import { dropdownOnHover } from '@/helpers/dropdownHover'
 import { initTooltips } from '@/helpers/tooltip'
 import { initList } from '@/helpers/list'
 import { importFonts } from '@/helpers/fonts'
+import { getAvatar, isDesktop } from '@/helpers/utils'
 
 import VueMyToasts from 'vue-my-toasts'
 import BaseToast from '@/components/BaseToast.vue'
 
 import Icon from '@/components/Icon.vue'
-
-export const installFonts = importFonts
 
 const docReady = fn => {
     if (document.readyState === 'loading') {
@@ -17,12 +16,13 @@ const docReady = fn => {
         setTimeout(fn, 1)
     }
 }
-export const installAfter = () => {
+
+const installAfter = () => {
     docReady(dropdownOnHover)
     docReady(initTooltips)
 }
 
-export const installList = (list, options) => {
+const installList = (list, options) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(initList(list, options))
@@ -30,7 +30,7 @@ export const installList = (list, options) => {
     })
 }
 
-export const initHelpers = (Vue) => {
+const initHelpers = (Vue) => {
     Vue.use(VueMyToasts, {
         component: BaseToast,
         options: {
@@ -39,4 +39,14 @@ export const initHelpers = (Vue) => {
         }
     })
     Vue.component(Icon.name, Icon)
+}
+
+
+export {
+    importFonts,
+    installAfter,
+    installList,
+    initHelpers,
+    getAvatar,
+    isDesktop,
 }

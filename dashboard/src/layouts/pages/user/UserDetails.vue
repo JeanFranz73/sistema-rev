@@ -1,12 +1,14 @@
 <script>
 import api from '@/utils/api'
 import { asPhone } from '@/utils/validator'
-import { installList } from '@/helpers'
+import { installList, getAvatar } from '@/helpers'
 
 export default {
     name: 'UserDetails',
     data: () => ({
         loading: true,
+        noAvatar: false,
+        getAvatar,
         pedidos: [
             { order_id: 2453, status: 4, date: '12/12/2023', total: 87 },
             { order_id: 2452, status: 1, date: '09/12/2023', total: 7264 },
@@ -137,7 +139,8 @@ export default {
                         <div class="row align-items-center g-3 g-sm-5 text-center text-sm-start">
                             <div class="col-12 col-sm-auto">
                                 <div class="user-select-none pe-none avatar avatar-5xl">
-                                    <img v-if="user.image" class="rounded-circle" src="@/assets/img/profile.png" alt="" />
+                                    <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(user.email, 150)"
+                                        @error="noAvatar = true" />
                                     <div v-else class=" avatar-name rounded-circle">
                                         <span>{{ user.initial }}</span>
                                     </div>
@@ -145,11 +148,9 @@ export default {
                             </div>
                             <div class="col-12 col-sm-auto flex-1 placeholder-wave">
                                 <h3>
-                                    <span :class="loading ? 'placeholder rounded' : ''">{{ user.name
-                                    }}</span>
+                                    <span :class="loading ? 'placeholder rounded' : ''">{{ user.name }}</span>
                                 </h3>
-                                <p :class="loading ? 'placeholder rounded' : ''" class="text-800">{{
-                                    user.username }}</p>
+                                <p :class="loading ? 'placeholder rounded' : ''" class="text-800">{{ user.username }}</p>
                             </div>
                         </div>
                     </div>

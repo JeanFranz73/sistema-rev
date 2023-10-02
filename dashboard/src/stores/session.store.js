@@ -5,7 +5,11 @@ import JWT from '@/utils/jwt'
 export const useSessionStore = defineStore('session', {
     state: () => ({
         token: '',
-        user: {}
+        user: {
+            name: 'usuário',
+            email: '',
+            role: 0
+        }
     }),
     getters: {
         isLoggedIn(state) {
@@ -19,6 +23,9 @@ export const useSessionStore = defineStore('session', {
         },
         getFirstName(state) {
             return state.user.name.split(' ')[0]
+        },
+        getEmail(state) {
+            return state.user.email
         }
     },
     actions: {

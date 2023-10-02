@@ -1,9 +1,8 @@
 import { Dropdown } from 'bootstrap'
-
-const isDesktop = () => (window.innerWidth > 992)
+import { isDesktop } from '@/helpers'
 
 export const dropdownOnHover = () => {
-    if (isDesktop()) {
+    if (isDesktop) {
         const hoverDropdowns = document.querySelectorAll('[dropdown-hover]')
 
         hoverDropdowns.forEach(dropdown => {
@@ -14,7 +13,7 @@ export const dropdownOnHover = () => {
                 dropdownButton.setAttribute('enabled', true)
 
                 dropdown.addEventListener('mouseover', () => {
-                    if (isDesktop()) {
+                    if (isDesktop) {
                         dropdownInstance.show()
                         dropdownInstance._menu.addEventListener('mouseleave', () => {
                             dropdownInstance.hide()

@@ -1,7 +1,7 @@
 import '@/scss/theme.scss'
 import 'bootstrap'
 
-import { initHelpers, installFonts } from '@/helpers'
+import { initHelpers, importFonts } from '@/helpers'
 import { installStores } from '@/stores'
 
 import { createApp } from 'vue'
@@ -12,7 +12,7 @@ import { router } from '@/router'
 
 const app = createApp(App)
 
-installFonts()
+importFonts()
 initHelpers(app)
 
 app.use(createPinia())

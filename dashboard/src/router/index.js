@@ -34,23 +34,23 @@ export const router = createRouter({
 router.afterEach(installAfter)
 
 router.beforeEach((to, from, next) => {
-    const session = useSessionStore()
+    //     const session = useSessionStore()
 
-    document.title = to.meta.title + ' | Divar Semijoias'
+    document.title = to.meta.title + ' | Sistema de Pedidos'
 
-    if (!session.isLoggedIn) {
-        if (to.meta.noAuth) {
-            next()
-        } else {
-            next({ name: 'login' })
-        }
-    } else {
-        if (to.meta.noAuth) {
-            next({ name: 'dashboard' }).then(() => {
-                this.$toasts.success('Você já está logado!')
-            })
-        } else {
-            next()
-        }
-    }
+    //     if (!session.isLoggedIn) {
+    //         if (to.meta.noAuth) {
+    next()
+    //         } else {
+    //             next({ name: 'login' })
+    //         }
+    //     } else {
+    //         if (to.meta.noAuth) {
+    //             next({ name: 'dashboard' }).then(() => {
+    //                 this.$toasts.success('Você já está logado!')
+    //             })
+    //         } else {
+    //             next()
+    //         }
+    //     }
 })

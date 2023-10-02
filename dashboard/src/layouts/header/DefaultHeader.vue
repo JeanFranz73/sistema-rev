@@ -3,16 +3,18 @@ import { defineComponent } from 'vue'
 
 import { useConfigStore, useSessionStore } from '@/stores'
 import { mapState, mapActions } from 'pinia'
-import { isDesktop } from '@/helpers'
+import { isDesktop, getAvatar } from '@/helpers'
 
 export default defineComponent({
     name: 'DefaultHeader',
     data: () => ({
-        navTheme: false
+        navTheme: false,
+        noAvatar: false,
+        getAvatar
     }),
     computed: {
         ...mapState(useConfigStore, ['getTheme']),
-        ...mapState(useSessionStore, ['getFirstName']),
+        ...mapState(useSessionStore, ['getFirstName', 'getEmail']),
         greetings() {
             return `Olá ${this.getFirstName}!`
         }
@@ -169,7 +171,11 @@ export default defineComponent({
             <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
                     data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                     <div class="avatar avatar-l">
-                        <img class="rounded-circle " src="https://github.com/jeanfranz73.png" alt="" />
+                        <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(getEmail, 40)"
+                            @error="noAvatar = true" />
+                        <div v-else class="avatar-name rounded-circle">
+                            <span>{{ getFirstName.charAt(0) }}</span>
+                        </div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border border-300"
@@ -178,7 +184,12 @@ export default defineComponent({
                         <div class="card-body p-0">
                             <div class="text-center pt-4 pb-3">
                                 <div class="avatar avatar-xl ">
-                                    <img class="rounded-circle " src="https://github.com/jeanfranz73.png" alt="" />
+                                    <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(getEmail, 48)"
+                                        @error="noAvatar = true" />
+                                    <div v-else class="avatar-name rounded-circle">
+                                        <span>{{ getFirstName.charAt(0) }}</span>
+                                    </div>
+                                    <!-- <img class="rounded-circle " src="https://github.com/jeanfranz73.png" alt="" /> -->
                                 </div>
                                 <h6 class="mt-2 text-black">{{ greetings }}</h6>
                             </div>
