@@ -129,10 +129,7 @@ export const initList = (el, options) => {
                 pageQuantity = Math.ceil(list.matchingItems.length / list.page)
                 pageCount = 1
                 updateListControls()
-                return item
-                    .values()
-                [key].toLowerCase()
-                    .includes(e.target.value.toLowerCase())
+                return item.values()[key].toLowerCase().includes(e.target.value.toLowerCase())
             })
         })
     }
@@ -196,10 +193,7 @@ export const initList = (el, options) => {
 
             updateListControls()
             listInfo &&
-                (listInfo.innerHTML = `${list.matchingItems.length === 0 ? 0 : list.i
-                    } a ${list.matchingItems.length === 0 ? 0 : numberOfcurrentItems
-                    } <span class='text-600'> itens de </span>${list.matchingItems.length
-                    }`)
+                (listInfo.innerHTML = `${list.matchingItems.length === 0 ? 0 : list.i} a ${list.matchingItems.length === 0 ? 0 : numberOfcurrentItems} <span class='text-600'> itens de </span>${list.matchingItems.length}`)
         }
 
         // -------fallback-----------

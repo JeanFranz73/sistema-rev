@@ -7,7 +7,7 @@ export default [{
     path: 'usuario/novo',
     name: 'new-user',
     meta: { title: 'Novo Usuário' },
-    component: () => import('@/layouts/pages/user/ListUsers.vue')
+    component: () => import('@/layouts/pages/user/UserEdit.vue')
 }, {
     path: 'usuario/:id',
     name: 'user-profile',

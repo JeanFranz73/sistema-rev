@@ -7,8 +7,8 @@ export default {
     name: 'UserDetails',
     data: () => ({
         loading: true,
+        avatar: '',
         noAvatar: false,
-        getAvatar,
         pedidos: [
             { order_id: 2453, status: 4, date: '12/12/2023', total: 87 },
             { order_id: 2452, status: 1, date: '09/12/2023', total: 7264 },
@@ -40,41 +40,36 @@ export default {
         },
         getPedidoStatus(status) {
             switch (status) {
-                case 1:
-                    return {
-                        desc: 'Processando',
-                        badge: 'warning',
-                        icon: 'clock'
-                    }
-                    break
-                case 2:
-                    return {
-                        desc: 'Em preparação',
-                        badge: 'info',
-                        icon: 'info-circle'
-                    }
-                    break
-                case 4:
-                    return {
-                        desc: 'Entregue',
-                        badge: 'success',
-                        icon: 'check'
-                    }
-                    break
-                case 5:
-                    return {
-                        desc: 'Cancelado',
-                        badge: 'danger',
-                        icon: 'x'
-                    }
-                    break
-                case 6:
-                    return {
-                        desc: 'Devolvido',
-                        badge: 'info',
-                        icon: 'arrow-back-up'
-                    }
-                    break
+            case 1:
+                return {
+                    desc: 'Processando',
+                    badge: 'warning',
+                    icon: 'clock'
+                }
+            case 2:
+                return {
+                    desc: 'Em preparação',
+                    badge: 'info',
+                    icon: 'info-circle'
+                }
+            case 4:
+                return {
+                    desc: 'Entregue',
+                    badge: 'success',
+                    icon: 'check'
+                }
+            case 5:
+                return {
+                    desc: 'Cancelado',
+                    badge: 'danger',
+                    icon: 'x'
+                }
+            case 6:
+                return {
+                    desc: 'Devolvido',
+                    badge: 'info',
+                    icon: 'arrow-back-up'
+                }
             }
         },
         async getUser() {
@@ -85,9 +80,13 @@ export default {
                         initial: res.data.name.charAt(0),
                         image: res.data.image ? res.data.image : undefined
                     }
+
+                    this.avatar = getAvatar(this.user.email, 150)
+                    this.noAvatar = false
+
                     installList(this.$refs.profileOrdersTable, this.ordersOptions)
                     this.loading = false
-                }).catch((err) => {
+                }).catch(() => {
                     this.$toasts.error('Não foi possível carregar o usuário.')
                 })
         }
@@ -139,8 +138,7 @@ export default {
                         <div class="row align-items-center g-3 g-sm-5 text-center text-sm-start">
                             <div class="col-12 col-sm-auto">
                                 <div class="user-select-none pe-none avatar avatar-5xl">
-                                    <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(user.email, 150)"
-                                        @error="noAvatar = true" />
+                                    <img v-if="!noAvatar" class="rounded-circle" :src="avatar" @error="noAvatar = true" />
                                     <div v-else class=" avatar-name rounded-circle">
                                         <span>{{ user.initial }}</span>
                                     </div>
@@ -176,7 +174,7 @@ export default {
                 <div class="card-body">
                     <div class="border-bottom border-dashed border-300">
                         <h4 class="mb-3 lh-sm lh-xl-1">Endereço padrão<button class="btn btn-link p-0"
-                                type="button"></button>
+                                                                              type="button"></button>
                         </h4>
                     </div>
                     <div class="pt-4 mb-7 mb-lg-4 mb-xl-7">
@@ -228,7 +226,7 @@ export default {
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-nowrap" id="personal-info-tab" data-bs-toggle="tab" href="#user-info"
-                        role="tab">
+                       role="tab">
                         <icones type="user" class="me-2" />
                         <span class="me-1">Informações pessoais</span>
                     </a>
@@ -259,11 +257,11 @@ export default {
                                     class="hover-actions-trigger btn-reveal-trigger position-static">
                                     <td class="order align-middle white-space-nowrap py-2 ps-0">
                                         <router-link class="fw-semi-bold text-primary"
-                                            :to="`/dashboard/pedido/${pedido.id}`">#{{ pedido.order_id }}</router-link>
+                                                     :to="`/dashboard/pedido/${pedido.id}`">#{{ pedido.order_id }}</router-link>
                                     </td>
                                     <td class="status align-middle white-space-nowrap text-start fw-bold text-700 py-2">
                                         <span class="badge badge-snipe fs--2"
-                                            :class="`badge-snipe-${getPedidoStatus(pedido.status).badge}`">
+                                              :class="`badge-snipe-${getPedidoStatus(pedido.status).badge}`">
                                             <span class="badge-label">{{ getPedidoStatus(pedido.status).desc }}</span>
                                             <icones class="ms-1" :type="getPedidoStatus(pedido.status).icon" size="12.8" />
                                         </span>
@@ -277,19 +275,24 @@ export default {
                     </div>
                     <div class="row align-items-center justify-content-between py-2 pe-0 fs--1">
                         <div class="col-auto d-flex">
-                            <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900" data-list-info="data-list-info">
-                            </p><a class="fw-semi-bold" data-list-view="*">Ver todos<span class="fas fa-angle-right ms-1"
-                                    data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none"
-                                data-list-view="less">Ver
-                                menos<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+                            <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900" data-list-info>
+                            </p>
+                            <a class="fw-semi-bold" data-list-view="*">
+                                <span>Ver todos</span>
+                                <icones type="chevron-right" class="ms-1" />
+                            </a>
+                            <a class="fw-semi-bold d-none" data-list-view="less">
+                                <span>Ver menos</span>
+                                <icones type="chevron-right" class="ms-1" />
+                            </a>
                         </div>
                         <div class="col-auto d-flex">
                             <button class="page-link" data-list-pagination="prev">
-                                <span class="fas fa-chevron-left"></span>
+                                <icones type="chevron-left" />
                             </button>
                             <ul class="mb-0 pagination"></ul>
                             <button class="page-link pe-0" data-list-pagination="next">
-                                <span class="fas fa-chevron-right"></span>
+                                <icones type="chevron-right" />
                             </button>
                         </div>
                     </div>
@@ -324,7 +327,7 @@ export default {
                                 </label>
                                 <div class="col-6 col-sm-2 col-lg-3 col-xl-2">
                                     <select class="form-select" id="date">
-                                        <option v-for=" index  in  30 " :value="index">{{ index }}</option>
+                                        <option v-for=" index in 30 " :key="index" :value="index">{{ index }}</option>
                                     </select>
                                 </div>
                                 <div class="col-6 col-sm-2 col-lg-3 col-xl-2">
@@ -360,7 +363,7 @@ export default {
                         </div>
                         <div class="col-12 col-lg-6">
                             <label class="form-label text-1000 fw-bold fs-0 ps-0 text-capitalize lh-sm"
-                                for="alternative_phone">
+                                   for="alternative_phone">
                                 <span>CPF</span>
                             </label>
                             <input class="form-control" id="alternative_phone" type="text" placeholder="000.000.000-00" />
@@ -374,6 +377,5 @@ export default {
         </div>
     </div>
 </template>
-
 
 <style lang="scss" scoped></style>

@@ -1,10 +1,10 @@
-import config from "@/helpers/config"
-import * as bcrypt from "bcrypt"
-import { sign } from "jsonwebtoken"
+import config from '@/helpers/config'
+import * as bcrypt from 'bcrypt'
+import { sign } from 'jsonwebtoken'
 
-import Session from "@/types/Session"
-import UserController from "@/controllers/UserController"
-import SessionService from "@/services/SessionService"
+import Session from '@/types/Session'
+import UserController from '@/controllers/UserController'
+import SessionService from '@/services/SessionService'
 
 class SessionController {
     async create(login): Promise<Session> {
@@ -12,17 +12,17 @@ class SessionController {
         const { username, password } = login
 
         if (!username) {
-            throw new Error("Usuário não especificado")
+            throw new Error('Usuário não especificado')
         }
 
         const user = await UserController.find(username)
 
         if (!user) {
-            throw new Error("Usuário não encontrado")
+            throw new Error('Usuário não encontrado')
         }
 
         if (!user.active) {
-            throw new Error("Usuário está inativo no sistema")
+            throw new Error('Usuário não está ativo no sistema')
         }
 
         if (user.password) {
@@ -30,11 +30,11 @@ class SessionController {
             const isPasswordValid = await bcrypt.compare(password, user.password)
 
             if (!isPasswordValid) {
-                throw new Error("Senha inválida")
+                throw new Error('Senha inválida')
             }
         } else {
             if (password) {
-                throw new Error("Senha inválida")
+                throw new Error('Senha inválida')
             }
         }
 
@@ -64,7 +64,7 @@ class SessionController {
     }
 
     async find(token): Promise<Session> {
-        let session = await SessionService.findBy('token', token)
+        const session = await SessionService.findBy('token', token)
         return session
     }
 }

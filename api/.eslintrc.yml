@@ -1,7 +1,9 @@
-extents:
-  - 'eslint:recommended'
-  - 'plugin:vue/vue3-recommended'
-
+extends:
+  - plugin:@typescript-eslint/recommended
+plugins: ['@typescript-eslint']
+parser: '@typescript-eslint/parser'
 rules:
-  indent: ['error', 1]
-  semicolon: ['error', 'never']
+  indent: [error, 4]
+  quotes: [error, single]
+  semi: off
+  '@typescript-eslint/semi': [error, never]

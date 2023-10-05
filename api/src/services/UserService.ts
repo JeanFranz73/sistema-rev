@@ -24,7 +24,7 @@ class UserService extends DefaultService<User> {
             const roles = this.db('user_roles').select()
             return roles
         } catch (err) {
-            console.error(`Erro ao selecionar selecionar cargos de usuário: `, err)
+            console.error('Erro ao selecionar selecionar cargos de usuário: ', err)
             throw err
         }
     }

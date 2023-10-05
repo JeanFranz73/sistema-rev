@@ -1,7 +1,30 @@
-extents:
-  - 'eslint:recommended'
-  - 'plugin:vue/vue3-recommended'
-
+extends:
+  - eslint:recommended
+  - plugin:vue/base
+  - plugin:vue/vue3-essential
+parserOptions:
+  ecmaVersion: latest
 rules:
-  indent: ['error', 1]
-  semicolon: ['error', 'never']
+  indent: [warn, 4]
+  quotes: [warn, single, { allowTemplateLiterals: true }]
+  no-template-curly-in-string: [error]
+  semi: [warn, never]
+  comma-spacing: [error, { before: false, after: true }]
+  block-spacing: [error, always]
+  func-call-spacing: [error, never]
+  object-curly-spacing: [warn, always, { arraysInObjects: false, objectsInObjects: false }]
+  no-multiple-empty-lines: [warn, { max: 1, maxBOF: 0,  maxEOF: 0 }]
+  keyword-spacing: [warn, { before: true, after: true }]
+  key-spacing: [warn, { beforeColon: false, afterColon: true, mode: strict }]
+  space-in-parens: [warn, never]
+  space-infix-ops: [error, { int32Hint: true }]
+  arrow-spacing: [error, { before: true, after: true }]
+  no-multi-spaces: [error]
+  vue/this-in-template: [warn, never]
+  vue/order-in-components: [error, { order: [ el, name, data, components, computed, [props, propsData], methods, watch, model, setup ]}]
+  vue/html-indent: [error, 4]
+  vue/v-on-style: [warn, shorthand]
+  vue/html-closing-bracket-newline: [error, { singleline: never, multiline: never }]
+  vue/html-closing-bracket-spacing: [warn, { startTag:  never, endTag: never, selfClosingTag: always }]
+  vue/no-multi-spaces: [error, { ignoreProperties: false }]
+  vue/multi-word-component-names: [error, { ignores: [Icones] }]

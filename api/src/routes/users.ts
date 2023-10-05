@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { verifyToken } from '@/middlewares/auth'
+import { isLoggedIn } from '@/middlewares/auth'
 import UserController from '@/controllers/UserController'
 import User from '@/types/User'
 
@@ -7,17 +7,17 @@ const manyRouter = Router()
 
 manyRouter.get('/', async (req, res) => {
     try {
-        let users: User[] = await UserController.findAll()
+        const users: User[] = await UserController.findAll()
 
         if (!users) {
             res.status(404).json({
-                message: "Usuários não encontrados"
+                message: 'Usuários não encontrados'
             })
         }
 
         res.status(200).json(users)
     } catch (err) {
-        console.error(`Erro ao selecionar usuários: `, err)
+        console.error('Erro ao selecionar usuários: ', err)
         res.status(500).json({
             message: err.message
         })
@@ -35,11 +35,11 @@ router.post('/new', async (req, res) => {
     delete newUser.active
 
     try {
-        let user = await UserController.add(newUser)
+        const user = await UserController.add(newUser)
 
         if (!user) {
             res.status(404).json({
-                message: "Usuário não encontrado"
+                message: 'Usuário não encontrado'
             })
         }
 
@@ -48,20 +48,20 @@ router.post('/new', async (req, res) => {
         res.status(201).json(user)
     } catch (err) {
 
-        console.error(`Erro ao adicionar usuário: `, err)
-        res.status(500).json({
+        console.error('Erro ao adicionar usuário: ', err)
+        res.status(400).json({
             message: err.message
         })
     }
 })
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
     res.status(422).json({
-        message: "Usuário não especificado"
+        message: 'Usuário não especificado'
     })
 })
 
-router.patch('/:id', verifyToken, async (req, res) => {
+router.patch('/:id', isLoggedIn, async (req, res) => {
     const id = req.params.id
     const newUser = req.body
 
@@ -70,7 +70,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
 
         if (!user) {
             res.status(404).json({
-                message: "Usuário não encontrado"
+                message: 'Usuário não encontrado'
             })
         }
 
@@ -78,9 +78,9 @@ router.patch('/:id', verifyToken, async (req, res) => {
 
         res.status(200).json(user)
     } catch (err) {
-        console.error(`Erro ao selecionar usuário: `, err)
-        res.status(500).json({
-            message: "Erro ao selecionar usuário"
+        console.error('Erro ao selecionar usuário: ', err)
+        res.status(400).json({
+            message: 'Erro ao selecionar usuário'
         })
     }
 })
@@ -89,11 +89,11 @@ router.get('/:id', async (req, res) => {
     const id = req.params.id
 
     try {
-        let user: User = await UserController.find(id)
+        const user: User = await UserController.find(id)
 
         if (!user) {
             res.status(404).json({
-                message: "Usuário não encontrado"
+                message: 'Usuário não encontrado'
             })
         }
 
@@ -101,11 +101,30 @@ router.get('/:id', async (req, res) => {
 
         res.status(200).json(user)
     } catch (err) {
-        console.error(`Erro ao selecionar usuário: `, err)
-        res.status(500).json({
-            message: "Erro ao selecionar usuário"
+        console.error('Erro ao selecionar usuário: ', err)
+        res.status(400).json({
+            message: err.message
         })
     }
 })
+
+router.post('/:id/change-password', async (req, res) => {
+    const id = req.params.id
+    const { oldPassword, newPassword } = req.body
+
+    try {
+        await UserController.editPassword(id, oldPassword, newPassword)
+
+        res.status(200).json({
+            message: 'Senha alterada com sucesso'
+        })
+    } catch (err) {
+        console.error('Erro ao alterar senha: ', err)
+        res.status(400).json({
+            message: err.message
+        })
+    }
+})
+
 
 export default router

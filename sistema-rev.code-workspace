@@ -9,5 +9,14 @@
 			"path": "api"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"eslint.format.enable": true,
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true
+	},
+	"extensions": {
+		"recommendations": [
+			"dbaeumer.vscode-eslint"
+		]
+	}
 }

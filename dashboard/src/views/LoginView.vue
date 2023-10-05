@@ -49,12 +49,13 @@ export default {
                         <h3 class="text-1000">Login</h3>
                         <p class="text-700">Entre com sua conta</p>
                     </div>
+                    <div v-if="$route.query.success" class="alert alert-success text-white small">Sucesso! Seu usuário foi cadastrado e enviado para aprovação.</div>
                     <form @submit.prevent="doLogin">
                         <div class="mb-3 text-start">
                             <label class="form-label" for="username">Nome de usuário</label>
                             <div class="form-icon-container">
                                 <input v-model="form.username" :disabled="loading" class="form-control form-icon-input"
-                                    id="username" placeholder="nomedeusuario" />
+                                       id="username" placeholder="nomedeusuario" />
                                 <icones type="user" class="form-icon fs--1" />
                             </div>
                         </div>
@@ -62,7 +63,7 @@ export default {
                             <label class="form-label" for="password">Senha</label>
                             <div class="form-icon-container">
                                 <input v-model="form.password" :disabled="loading" class="form-control form-icon-input"
-                                    id="password" type="password" placeholder="Senha" autocomplete />
+                                       id="password" type="password" placeholder="Senha" autocomplete />
                                 <icones type="key" class="form-icon fs--1" />
                             </div>
                         </div>
@@ -76,7 +77,7 @@ export default {
                         </div>
                         <button type="submit" :disabled="loading" class="btn btn-primary w-100 mb-3">
                             <span v-if="loading" class="spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>
+                                  aria-hidden="true"></span>
                             <span v-else>Entrar</span>
                         </button>
                     </form>

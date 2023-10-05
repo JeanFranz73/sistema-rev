@@ -24,7 +24,7 @@ export default defineComponent({
         ...mapActions(useSessionStore, ['logout']),
         async doLogout() {
             await this.logout().then(() => {
-                this.$router.push('/login').then(() => {
+                this.$router.push({ name: 'login' }).then(() => {
                     this.$toasts.success('Logout efetuado com sucesso!')
                 })
             })
@@ -55,7 +55,7 @@ export default defineComponent({
     <nav class="navbar navbar-top fixed-top navbar-expand-lg" id="navbarTop" ref="defaultHeaderNav">
         <div class="navbar-logo">
             <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" data-bs-toggle="collapse"
-                data-bs-target="#navbarTopCollapse">
+                    data-bs-target="#navbarTopCollapse">
                 <span class="navbar-toggle-icon">
                     <span class="toggle-line"></span>
                 </span>
@@ -69,7 +69,7 @@ export default defineComponent({
             </router-link>
         </div>
         <div class="collapse navbar-collapse navbar-top-collapse order-1 order-lg-0 justify-content-center"
-            id="navbarTopCollapse">
+             id="navbarTopCollapse">
             <ul class="navbar-nav navbar-nav-top">
                 <li class="nav-item dropdown" dropdown-hover>
                     <router-link :to="{ name: 'orders' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
@@ -157,35 +157,35 @@ export default defineComponent({
             <li class="nav-item">
                 <div class="theme-control-toggle px-2">
                     <input class="form-check-input ms-0 theme-control-toggle-input" type="checkbox" v-model="navTheme"
-                        true-value="dark" false-value="light" id="themeControlToggle" />
+                           true-value="dark" false-value="light" id="themeControlToggle" />
                     <label class="mb-0 theme-control-toggle-label theme-control-toggle-light" for="themeControlToggle"
-                        data-bs-toggle="tooltip" desktop-only data-bs-placement="left" title="Alterar para tema claro">
+                           data-bs-toggle="tooltip" desktop-only data-bs-placement="left" title="Alterar para tema claro">
                         <icones type="moon" size="16" />
                     </label>
                     <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle"
-                        data-bs-toggle="tooltip" desktop-only data-bs-placement="left" title="Alterar para tema escuro">
+                           data-bs-toggle="tooltip" desktop-only data-bs-placement="left" title="Alterar para tema escuro">
                         <icones type="sun" size="16" />
                     </label>
                 </div>
             </li>
             <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
-                    data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                    <div class="avatar avatar-l">
-                        <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(getEmail, 40)"
-                            @error="noAvatar = true" />
-                        <div v-else class="avatar-name rounded-circle">
-                            <span>{{ getFirstName.charAt(0) }}</span>
-                        </div>
-                    </div>
-                </a>
+                                             data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                                              <div class="avatar avatar-l">
+                                                  <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(getEmail, 40)"
+                                                       @error="noAvatar = true" />
+                                                  <div v-else class="avatar-name rounded-circle">
+                                                      <span>{{ getFirstName.charAt(0) }}</span>
+                                                  </div>
+                                              </div>
+                                          </a>
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border border-300"
-                    aria-labelledby="navbarDropdownUser">
+                     aria-labelledby="navbarDropdownUser">
                     <div class="card position-relative border-0">
                         <div class="card-body p-0">
                             <div class="text-center pt-4 pb-3">
                                 <div class="avatar avatar-xl ">
                                     <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(getEmail, 48)"
-                                        @error="noAvatar = true" />
+                                         @error="noAvatar = true" />
                                     <div v-else class="avatar-name rounded-circle">
                                         <span>{{ getFirstName.charAt(0) }}</span>
                                     </div>

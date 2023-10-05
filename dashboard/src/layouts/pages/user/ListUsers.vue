@@ -4,9 +4,8 @@ import { installList } from '@/helpers'
 import { asPhone } from '@/utils/validator'
 import { getAvatar } from '@/helpers'
 
-
 export default {
-    name: "ListUsers",
+    name: 'ListUsers',
     data: () => ({
         loading: true,
         getAvatar,
@@ -43,16 +42,17 @@ export default {
                         user = {
                             ...user
                         }
-
                     })
 
                     this.loading = false
-
                     this.list = await installList(this.$refs.usersList, this.optionsList)
-
                 })
                 .catch((err) => {
-                    this.$toasts.error('Não foi possível carregar os usuários.')
+                    if (err.response) {
+                        this.$toasts.error(err.response.data.message)
+                    } else {
+                        this.$toasts.error('Não foi possível carregar os usuários.')
+                    }
                 })
         },
         goToUserProfile(user) {
@@ -68,22 +68,28 @@ export default {
         this.init()
     }
 }
-
 </script>
+
 <template>
     <main class="main" id="top">
         <nav class="mb-2" aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
-                    <router-link :to="{ name: 'dashboard' }">Painel</router-link>
+                    <router-link :to="{ name: 'dashboard' }">
+                        Painel
+                    </router-link>
                 </li>
-                <li class="breadcrumb-item active">Usuários</li>
+                <li class="breadcrumb-item active">
+                    Usuários
+                </li>
             </ol>
         </nav>
         <div class="mb-9">
             <div class="row g-2 mb-4">
                 <div class="col-auto">
-                    <h2 class="mb-0">Usuários</h2>
+                    <h2 class="mb-0">
+                        Usuários
+                    </h2>
                 </div>
             </div>
             <div id="users-list" ref="usersList" :data-list="JSON.stringify(optionsList)">
@@ -102,7 +108,7 @@ export default {
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" :class="usersFilter == 'inactive' ? 'active' : ''"
-                            @click="showActiveUsers(false)">
+                           @click="showActiveUsers(false)">
                             <span>Inativos </span>
                             <span class="text-700 fw-semi-bold">({{ (users.length - activeUsers) }})</span>
                         </a>
@@ -114,7 +120,7 @@ export default {
                             <div class="search-box">
                                 <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
                                     <input class="form-control search-input search" :disabled="loading"
-                                        placeholder="Pesquisar usuário" />
+                                           placeholder="Pesquisar usuário" />
                                     <icones type="user-search" class="search-box-icon" />
                                 </form>
                             </div>
@@ -159,14 +165,16 @@ export default {
                                                 <div class="avatar-name rounded-circle">
                                                 </div>
                                             </div>
-                                            <p class="name mb-0 ms-3 placeholder rounded">Nome de usuário</p>
+                                            <p class="name mb-0 ms-3 placeholder rounded">
+                                                Nome de usuário
+                                            </p>
                                         </div>
                                     </td>
                                     <td class="username align-middle white-space-nowrap pe-5 fw-semi-bold placeholder-wave">
                                         <span class="placeholder rounded">usuario</span>
                                     </td>
                                     <td class="email align-middle white-space-nowrap pe-5 fw-semi-bold">
-                                        <span class="placeholder rounded">email@usuario.com</span>
+                                        <span class="placeholder rounded">uauario@ZZZ.com</span>
                                     </td>
                                     <td class="phone align-middle white-space-nowrap pe-5 fw-semi-bold">
                                         <span class="placeholder rounded">(00) 00000-0000</span>
@@ -178,19 +186,21 @@ export default {
                                         <span class="placeholder rounded">Ativo</span>
                                     </td>
                                 </tr>
-                                <template v-for="user in users">
+                                <template v-for="user in users" :key="user.id">
                                     <tr @click="$router.push({ name: 'user-profile', params: { id: user.username } })"
                                         :id="user.id" ref="usersList" class="position-static">
                                         <td class="align-middle white-space-nowrap pe-5 ps-1">
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar avatar-m">
                                                     <img v-if="!user.noAvatar" class="rounded-circle"
-                                                        :src="getAvatar(user.email, 32)" @error="user.noAvatar = true" />
+                                                         :src="getAvatar(user.email, 32)" @error="user.noAvatar = true" />
                                                     <div v-else class="avatar-name rounded-circle">
                                                         <span>{{ user.name.charAt(0) }}</span>
                                                     </div>
                                                 </div>
-                                                <p class="name mb-0 ms-3 text-1100 fw-bold">{{ user.name }}</p>
+                                                <p class="name mb-0 ms-3 text-1100 fw-bold">
+                                                    {{ user.name }}
+                                                </p>
                                             </div>
                                         </td>
                                         <td class="align-middle white-space-nowrap pe-5 fw-semi-bold">
@@ -244,4 +254,3 @@ export default {
         </div>
     </main>
 </template>
-<style></style>

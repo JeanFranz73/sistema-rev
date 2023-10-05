@@ -5,6 +5,11 @@ export default {
     components: {
         Icon
     },
+    computed: {
+        iconData() {
+            return `tabler:${this.type}`
+        }
+    },
     props: {
         type: {
             type: String,
@@ -13,11 +18,6 @@ export default {
         size: {
             type: String,
             required: false
-        }
-    },
-    computed: {
-        iconData() {
-            return `tabler:${this.type}`
         }
     },
 }

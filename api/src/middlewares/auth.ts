@@ -1,55 +1,70 @@
 import config from '@/helpers/config'
+import Role from '@/types/Role'
 import * as jwt from 'jsonwebtoken'
 
-const verify = (token, req, res) => {
-    if (typeof token !== 'undefined') {
-        try {
-            const bearerToken = token.split(' ')[1]
-            jwt.verify(bearerToken, config.db.secret)
-            return true
-        } catch (err) {
+function verifyToken(token: string): boolean {
+    try {
+        jwt.verify(token, config.db.secret)
+        return true
+    } catch (err) {
+        return false
+    }
+}
+
+function isUserActive(token: string): boolean {
+    const { active } = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).user
+    return active
+}
+
+export const isLoggedIn = (req, res, next) => {
+    const bearerHeader = req.get('authorization')
+
+    if (typeof bearerHeader !== 'undefined') {
+        const bearerToken = bearerHeader.split(' ')[1]
+
+        if (verifyToken(bearerHeader)) {
+            if (isUserActive(bearerToken)) {
+                next()
+            } else {
+                res.status(403).json({
+                    message: 'Usuário inativo'
+                })
+            }
+        } else {
             res.status(403).json({
-                message: "Token inválido"
+                message: 'Token inválido'
             })
         }
     } else {
         res.status(403).json({
-            message: "Token não especificado"
+            message: 'Token não especificado'
         })
-    }
-    return false
-}
-
-export const verifyToken = (req, res, next) => {
-    const bearerHeader = req.get('authorization')
-    if (verify(bearerHeader, req, res)) {
-        next()
     }
 }
 
 export const isAdmin = (req, res, next) => {
     const bearerHeader = req.get('authorization')
+
     if (typeof bearerHeader !== 'undefined') {
-        try {
-            const bearerToken = bearerHeader.split(' ')[1]
-            jwt.verify(bearerToken, config.db.secret)
-            req.token = bearerToken
-            const { role } = JSON.parse(Buffer.from(bearerHeader.split(' ')[1].split('.')[1], 'base64').toString()).user
-            if (role === 1) {
+        const bearerToken = bearerHeader.split(' ')[1]
+
+        if (verifyToken(bearerToken)) {
+            const { role } = JSON.parse(Buffer.from(bearerToken.split('.')[1], 'base64').toString()).user
+            if (role === Role.ADMIN) {
                 next()
             } else {
                 res.status(403).json({
-                    message: "Você não tem permissão para acessar essa rota"
+                    message: 'Você não tem permissão para acessar essa rota'
                 })
             }
-        } catch (err) {
+        } else {
             res.status(403).json({
-                message: "Token inválido"
+                message: 'Token inválido'
             })
         }
     } else {
         res.status(403).json({
-            message: "Token não especificado"
+            message: 'Token não especificado'
         })
     }
 }

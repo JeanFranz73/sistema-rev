@@ -34,6 +34,8 @@ export const useSessionStore = defineStore('session', {
             if (token) {
                 this.token = JWT.getToken(token)
                 this.user = JWT.getUser(token)
+
+                api.setBearerToken(token)
             }
         },
         async login(login) {

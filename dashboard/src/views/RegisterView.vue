@@ -13,14 +13,6 @@ export default {
             cpf: ''
         }
     }),
-    watch: {
-        masks: {
-            handler(val) {
-                this.form.cpf = this.masks.cpf.unmaskedValue
-            },
-            deep: true
-        }
-    },
     methods: {
         initMasks() {
             this.masks.cpf = IMask(document.getElementById('cpf'), {
@@ -38,6 +30,14 @@ export default {
                 // console.log(input)
                 validate(input)
             })
+        }
+    },
+    watch: {
+        masks: {
+            handler(val) {
+                this.form.cpf = this.masks.cpf.unmaskedValue
+            },
+            deep: true
         }
     },
     mounted() {
@@ -73,20 +73,20 @@ export default {
                     <div class="mb-3 text-start">
                         <label class="form-label" for="cpf">CPF</label>
                         <input class="form-control" id="cpf" v-model="masks.cpfMask" type="cpf" placeholder="000.000.000-00"
-                            maxlength="14" />
+                               maxlength="14" />
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-sm-6">
                             <label class="form-label" for="password">Senha</label>
                             <input class="form-control form-icon-input" id="password" type="password" autocomplete="off"
-                                placeholder="Senha" />
+                                   placeholder="Senha" />
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label" for="confirm-password">Repita a senha</label>
                             <input class="form-control form-icon-input" id="confirm-password" type="password"
-                                autocomplete="off" placeholder="Repita a senha" />
+                                   autocomplete="off" placeholder="Repita a senha" />
                             <div class="invalid-feedback"></div>
                         </div>
                     </div>
