@@ -8,7 +8,6 @@ const api = axios.create({
 })
 
 const setBearerToken = (token) => {
-    console.log('setBearerToken', token)
     api.defaults.headers.Authorization = `Bearer ${token}`
 }
 

@@ -1,21 +1,16 @@
 <script>
-import { mapState } from 'pinia'
-import { useSessionStore } from '@/stores'
-
 import { getAvatar } from '@/helpers'
 
 export default {
     name: 'UserEdit',
     data: () => ({
         getAvatar,
-        user: {}
-    }),
-    computed: {
-        ...mapState(useSessionStore, ['getLoggedUser'])
-    },
-    mounted() {
-        this.user = this.getLoggedUser
-    },
+        noAvatar: false,
+        user: {
+            name: 'Novo Usuário',
+            username: 'usuario',
+        }
+    })
 }
 </script>
 
@@ -28,14 +23,18 @@ export default {
                         <div class="bg-holder rounded-top" style="background-image: linear-gradient(0deg, #00000044 -3%, rgba(0, 0, 0, 0) 83%)">
                         </div>
                         <div class="avatar avatar-4xl status-online feed-avatar-profile">
-                            <img class="rounded-circle img-thumbnail bg-white shadow-sm" :src="getAvatar(user.email, 96)" width="200" alt="" />
+                            <img v-if="!noAvatar" class="rounded-circle img-thumbnail bg-white shadow-sm" :src="getAvatar(user.email, 200)" width="200" @error="noAvatar = true" />
+                            <div v-else class="avatar-name rounded-circle">
+                                <span>{{ user.name.charAt(0) }}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex flex-wrap mb-2 align-items-center">
-                                    <h3 class="me-2">{{ user.name }}</h3><span class="fw-normal fs-0">{{ user.username }}</span>
+                                    <h3 class="me-2">{{ user.name ?? 'Novo usuário' }}</h3>
+                                    <span class="fw-normal fs-0">{{ user.username ?? 'usuario' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +162,7 @@ export default {
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
-                            <h4 class="mb-4">Change Password</h4>
+                            <h4 class="mb-4">Alterar senha</h4>
                             <div class="form-icon-container mb-3">
                                 <div class="form-floating">
                                     <input class="form-control form-icon-input" id="oldPassword" type="password" placeholder="Senha antiga" />
@@ -189,8 +188,13 @@ export default {
                     </div>
                     <div class="text-end mb-6">
                         <div>
-                            <button class="btn btn-snipe-secondary me-2">Cancel Changes</button>
-                            <button class="btn btn-snipe-success">Save Information</button>
+                            <button class="btn btn-snipe-secondary me-2">
+                                <span>Cancelar</span>
+                            </button>
+                            <button class="btn btn-snipe-success">
+                                <icones type="user-check" class="me-2" size="13" />
+                                <span>Salvar alterações</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -203,7 +207,11 @@ export default {
                     <div class="col-12 col-md-6">
                         <h4 class="text-black">Inativar conta</h4>
                         <p class="text-700">Desativar o usuário e bloquear o acesso ao sistema</p>
-                        <button class="btn btn-snipe-danger">Inativar conta</button>
+
+                        <button class="btn btn-snipe-danger">
+                            <icones type="user-minus" class="me-2" size="13" />
+                            <span>Inativar conta</span>
+                        </button>
                     </div>
                 </div>
             </div>

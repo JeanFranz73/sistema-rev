@@ -168,16 +168,17 @@ export default defineComponent({
                     </label>
                 </div>
             </li>
-            <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
-                                             data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                                              <div class="avatar avatar-l">
-                                                  <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(getEmail, 40)"
-                                                       @error="noAvatar = true" />
-                                                  <div v-else class="avatar-name rounded-circle">
-                                                      <span>{{ getFirstName.charAt(0) }}</span>
-                                                  </div>
-                                              </div>
-                                          </a>
+            <li class="nav-item dropdown">
+                <a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
+                   data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                    <div class="avatar avatar-l">
+                        <img v-if="!noAvatar" class="rounded-circle" :src="getAvatar(getEmail, 40)"
+                             @error="noAvatar = true" />
+                        <div v-else class="avatar-name rounded-circle">
+                            <span>{{ getFirstName.charAt(0) }}</span>
+                        </div>
+                    </div>
+                </a>
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border border-300"
                      aria-labelledby="navbarDropdownUser">
                     <div class="card position-relative border-0">
