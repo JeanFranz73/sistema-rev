@@ -14,6 +14,11 @@ export default [{
     meta: { title: 'Perfil do Usuário' },
     component: () => import('@/layouts/pages/user/UserDetails.vue')
 }, {
+    path: 'usuario/:id/editar',
+    name: 'user-edit',
+    meta: { title: 'Editar Usuário' },
+    component: () => import('@/layouts/pages/user/UserEdit.vue')
+}, {
     path: 'usuario',
     redirect: { name: 'users' }
 }]
