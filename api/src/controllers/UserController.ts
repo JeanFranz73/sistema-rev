@@ -54,7 +54,6 @@ class UserController {
             }
         }
 
-
         await UserService.update(dbUser.id, user)
 
         return {

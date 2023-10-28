@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { isLoggedIn } from '@/middlewares/auth'
+import { isAdmin, isLoggedIn } from '@/middlewares/auth'
 import ProductController from '@/controllers/ProductController'
 import { ProductCategoryType, ProductType } from '@/types/Product'
 
@@ -24,7 +24,7 @@ productsRouter.get('/', async (req, res) => {
     }
 })
 
-productsRouter.get('/categories', async (req, res) => {
+productsRouter.get('/categories', isLoggedIn, async (req, res) => {
     try {
         const categories: ProductCategoryType[] = await ProductController.getProductCategories()
 
@@ -75,9 +75,11 @@ router.get('/', async (req, res) => {
     })
 })
 
-router.patch('/:id', isLoggedIn, async (req, res) => {
+router.patch('/:id', isAdmin, async (req, res) => {
     const id = req.params.id
     const newProduct = req.body
+
+    delete newProduct.username
 
     try {
         const product = await ProductController.edit(id, newProduct)
@@ -97,7 +99,7 @@ router.patch('/:id', isLoggedIn, async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', isLoggedIn, async (req, res) => {
     const id = req.params.id
 
     try {

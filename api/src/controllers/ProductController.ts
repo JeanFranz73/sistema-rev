@@ -22,7 +22,7 @@ class ProductController {
         const ProductId = await ProductService.create(Product)
 
         if (ProductId) {
-            return await ProductService.findById(ProductId)
+            return await ProductService.findById(ProductId[0])
         }
 
         throw new Error('Erro ao adicionar produto')
@@ -32,8 +32,6 @@ class ProductController {
         const dbProduct = await this.find(ProductId)
 
         console.log(ProductId)
-
-        delete Product.active
 
         await ProductService.update(dbProduct.id, Product)
 
