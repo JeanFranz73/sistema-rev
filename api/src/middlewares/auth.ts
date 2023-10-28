@@ -1,5 +1,6 @@
+import UserController from '@/controllers/UserController'
 import config from '@/helpers/config'
-import Role from '@/types/Role'
+import { Role } from '@/types/Role'
 import * as jwt from 'jsonwebtoken'
 
 function verifyToken(token: string): boolean {
@@ -11,9 +12,10 @@ function verifyToken(token: string): boolean {
     }
 }
 
-function isUserActive(token: string): boolean {
-    const { active } = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).user
-    return active
+const isUserActive = async (token: string): Promise<boolean> => {
+    const { id } = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).user
+    const user = await UserController.find(id)
+    return user.active
 }
 
 export const isLoggedIn = (req, res, next) => {
@@ -22,7 +24,7 @@ export const isLoggedIn = (req, res, next) => {
     if (typeof bearerHeader !== 'undefined') {
         const bearerToken = bearerHeader.split(' ')[1]
 
-        if (verifyToken(bearerHeader)) {
+        if (verifyToken(bearerToken)) {
             if (isUserActive(bearerToken)) {
                 next()
             } else {
