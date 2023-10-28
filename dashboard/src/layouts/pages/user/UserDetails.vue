@@ -80,7 +80,7 @@ export default {
                         initial: res.data.name.charAt(0),
                         image: res.data.image ? res.data.image : undefined
                     }
-
+                    
                     this.avatar = getAvatar(this.user.email, 150)
                     this.noAvatar = false
 
@@ -92,7 +92,7 @@ export default {
         }
     },
     mounted() {
-        this.getUser()
+        this.getUser();
     }
 }
 </script>
@@ -122,10 +122,10 @@ export default {
                     </button>
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-snipe-secondary">
-                        <icones type="key" class="me-2" />
-                        <span>Redefinir Senha</span>
-                    </button>
+                    <router-link class="btn btn-snipe-secondary" :to="{name: 'user-edit', params: { id: user.username }}">
+                        <icones type="user-edit" class="me-2" />
+                        <span>Editar usuário</span>
+                    </router-link>
                 </div>
             </div>
         </div>
