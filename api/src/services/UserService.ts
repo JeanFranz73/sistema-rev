@@ -1,9 +1,9 @@
 import DefaultService from '@/services/default'
-import type User from '@/types/User'
+import { UserType } from '@/types/User'
 
 const table: string = 'users'
 
-class UserService extends DefaultService<User> {
+export class UserService extends DefaultService<UserType> {
 
     constructor() {
         super(table)
@@ -11,7 +11,7 @@ class UserService extends DefaultService<User> {
 
     findByUsername(username) {
         try {
-            const user = this.db<User>(table).where({ username }).first()
+            const user = this.db<UserType>(table).where({ username }).first()
             return user
         } catch (err) {
             console.error(`Erro ao selecionar item em ${table}: `, err)

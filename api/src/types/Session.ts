@@ -1,7 +1,5 @@
-type Session = {
+export type SessionType = {
     token: string
     user_id: number
-    created_at?: Date
+    created?: Date
 }
-
-export default Session

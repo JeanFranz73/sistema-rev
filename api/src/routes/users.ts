@@ -1,13 +1,13 @@
 import { Router } from 'express'
-import { isLoggedIn } from '@/middlewares/auth'
+import { isAdmin, isLoggedIn } from '@/middlewares/auth'
 import UserController from '@/controllers/UserController'
-import User from '@/types/User'
+import { UserType } from '@/types/User'
 
 const manyRouter = Router()
 
 manyRouter.get('/', async (req, res) => {
     try {
-        const users: User[] = await UserController.findAll()
+        const users: UserType[] = await UserController.findAll()
 
         if (!users) {
             res.status(404).json({
@@ -28,6 +28,12 @@ export const usersRouter = manyRouter
 
 const router = Router()
 
+router.get('/', async (req, res) => {
+    res.status(422).json({
+        message: 'Usuário não especificado'
+    })
+})
+
 router.post('/new', async (req, res) => {
     const newUser = req.body
 
@@ -35,7 +41,7 @@ router.post('/new', async (req, res) => {
     delete newUser.active
 
     try {
-        const user = await UserController.add(newUser)
+        const user: UserType = await UserController.add(newUser)
 
         if (!user) {
             res.status(404).json({
@@ -47,26 +53,49 @@ router.post('/new', async (req, res) => {
 
         res.status(201).json(user)
     } catch (err) {
+        console.error('Erro ao criar usuário: ', err)
 
-        console.error('Erro ao adicionar usuário: ', err)
+        if (err.code === 'ER_DUP_ENTRY') {
+            res.status(409).json({
+                message: 'Nome de usuário já existente'
+            })
+        } else {
+            res.status(400).json({
+                message: 'Erro ao criar usuário'
+            })
+        }
+    }
+})
+
+router.get('/:id', isLoggedIn, async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const user: UserType = await UserController.find(id)
+
+        if (!user) {
+            res.status(404).json({
+                message: 'Usuário não encontrado'
+            })
+        }
+
+        delete user.password
+
+        res.status(200).json(user)
+    } catch (err) {
+        console.error('Erro ao selecionar usuário: ', err)
         res.status(400).json({
             message: err.message
         })
     }
 })
 
-router.get('/', async (req, res) => {
-    res.status(422).json({
-        message: 'Usuário não especificado'
-    })
-})
-
-router.patch('/:id', isLoggedIn, async (req, res) => {
+router.patch('/:id', isAdmin, async (req, res) => {
     const id = req.params.id
     const newUser = req.body
 
     try {
-        const user = await UserController.edit(id, newUser)
+        const user: UserType = await UserController.edit(id, newUser)
 
         if (!user) {
             res.status(404).json({
@@ -85,35 +114,12 @@ router.patch('/:id', isLoggedIn, async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.post('/:id/change-password', isAdmin, async (req, res) => {
     const id = req.params.id
+    const { oldPassword, password } = req.body
 
     try {
-        const user: User = await UserController.find(id)
-
-        if (!user) {
-            res.status(404).json({
-                message: 'Usuário não encontrado'
-            })
-        }
-
-        delete user.password
-
-        res.status(200).json(user)
-    } catch (err) {
-        console.error('Erro ao selecionar usuário: ', err)
-        res.status(400).json({
-            message: err.message
-        })
-    }
-})
-
-router.post('/:id/change-password', async (req, res) => {
-    const id = req.params.id
-    const { oldPassword, newPassword } = req.body
-
-    try {
-        await UserController.editPassword(id, oldPassword, newPassword)
+        await UserController.editPassword(id, oldPassword, password)
 
         res.status(200).json({
             message: 'Senha alterada com sucesso'
@@ -126,5 +132,4 @@ router.post('/:id/change-password', async (req, res) => {
     }
 })
 
-
-export default router
+export const userRouter = router

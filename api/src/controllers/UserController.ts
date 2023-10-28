@@ -1,12 +1,12 @@
 import * as bcrypt from 'bcrypt'
 
-import User, { UserRoleType as UserRole } from '@/types/User'
+import { UserType, UserRoleType } from '@/types/User'
 import UserService from '@/services/UserService'
 
 class UserController {
-    async findAll(): Promise<User[]> {
-        const roles: UserRole[] = await UserService.getUserRoles()
-        const users: User[] = await UserService.findAll()
+    async findAll(): Promise<UserType[]> {
+        const roles: UserRoleType[] = await UserService.getUserRoles()
+        const users: UserType[] = await UserService.findAll()
 
         users.forEach(user => {
             delete user.password
@@ -16,8 +16,8 @@ class UserController {
         return users
     }
 
-    async find(id: number | string): Promise<User> {
-        const user: User = await UserService.findById(id) ?? UserService.findByUsername(id)
+    async find(id: number | string): Promise<UserType> {
+        const user: UserType = await UserService.findById(id) ?? UserService.findByUsername(id)
 
         if (!user) {
             throw new Error('Usuário não encontrado')
@@ -26,28 +26,34 @@ class UserController {
         return user
     }
 
-    async add(user: User) {
+    async add(user: UserType) {
         if (user.password) {
             const salt = await bcrypt.genSalt(10)
             user.password = await bcrypt.hash(user.password, salt)
         }
 
-        const userId = UserService.create(user)
+        const userId = await UserService.create(user)
 
         if (userId) {
-            return await UserService.findById(userId)
+            return await UserService.findById(userId[0])
         }
-
-        throw new Error('Erro ao adicionar usuário')
     }
 
-    async edit(userId: number | string, user: User) {
-        const dbUser = await this.find(userId)
-
-        console.log(userId)
-
-        delete user.password
+    async edit(userId: number | string, user: UserType) {
+        
         delete user.active
+
+        const dbUser: UserType = await this.find(userId)
+
+        if (user.password) {
+            if (await bcrypt.compare(user.oldPassword, dbUser.password)) {
+                const salt = await bcrypt.genSalt(10)
+                user.password = await bcrypt.hash(user.password, salt)
+            } else {
+                throw new Error('Senha incorreta')
+            }
+        }
+
 
         await UserService.update(dbUser.id, user)
 
@@ -57,7 +63,7 @@ class UserController {
         }
     }
 
-    async editPassword(userId: number | string, oldPassword: string, newPassword: string) {
+    async editPassword(userId: number | string, oldPassword: string, password: string) {
         const user = await this.find(userId)
 
         if (!user) {
@@ -73,7 +79,7 @@ class UserController {
         }
 
         const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(newPassword, salt)
+        const hashedPassword = await bcrypt.hash(password, salt)
 
         await UserService.update(user.id, { password: hashedPassword})
     }

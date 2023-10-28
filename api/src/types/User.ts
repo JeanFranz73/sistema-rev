@@ -3,16 +3,14 @@ export type UserRoleType = {
     name: string
 }
 
-type UserType = {
+export type UserType = {
     id: number
     username: string
     name?: string
+    oldPassword?: string
     password?: string
     role: UserRoleType | number
     email: string
-    active: boolean
-    created_at: Date
+    active?: boolean
+    created?: Date
 }
-
-
-export default UserType
