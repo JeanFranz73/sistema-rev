@@ -62,6 +62,9 @@ export default {
                     id: user.username,
                 }
             })
+        },
+        addNewUser(){
+            this.$router.push({name: 'new-user'});
         }
     },
     mounted() {
@@ -126,7 +129,7 @@ export default {
                             </div>
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" @click="addNewUser">
                                 <icones type="user-plus" class="me-2" size="16" />
                                 Adicionar usuário
                             </button>

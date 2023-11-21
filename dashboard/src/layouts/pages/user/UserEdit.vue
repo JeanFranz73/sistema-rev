@@ -21,7 +21,7 @@ export default {
         hasParameter: false
     }),
     methods: {
-        async getUser() {
+        async getUser(){
             await api.get(`/user/${this.$route.params.id}`)
                 .then((res) => {
                     this.user = {
@@ -43,9 +43,6 @@ export default {
         },
         async doSubmit(){
             this.loading = true;
-            let formUserData = this.user;
-            delete formUserData.confirmPassword;
-
             if(this.user.password && this.user.password !== this.user.confirmPassword){
                 this.$toasts.error('As senhas informadas não são iguais.');
                 this.loading = false;
@@ -53,24 +50,32 @@ export default {
             }
             
             if(this.hasParameter){
-                delete formUserData.oldPassword;
-                delete formUserData.initial;
-                delete formUserData.created;
-                await api.patch(`/user/${this.$route.params.id}`, formUserData)
+                delete this.user.confirmPassword;
+                delete this.user.oldPassword;
+                delete this.user.initial;
+                delete this.user.created;
+                await api.patch(`/user/${this.$route.params.id}`, this.user)
                 .then(res => {
                     this.$toasts.success("Usuário editado com sucesso.");
+                    this.$router.push({name: 'users'});
                 }).catch(error => {
                     console.log(error)
                 })
             } else {
-                await api.post('/user/new', formUserData)
+                delete this.user.confirmPassword;
+                delete this.user.oldPassword;
+                await api.post('/user/new', this.user)
                     .then(res => {
                         this.$toasts.success("Usuário adicionado com sucesso.");
+                        this.$router.push({name: 'users'});
                     }).catch(error => {
                         console.log(error)
                     })
             }
             this.loading = false;
+        },
+        getOutOfPage(){
+            this.$router.push({name: 'users'});
         }
     },
     mounted(){
@@ -114,6 +119,15 @@ export default {
                     <div class="mb-6">
                         <h4 class="mb-4">Informações Pessoais</h4>
                         <div class="row g-3">
+                            <div class="col-12 col-sm-6">
+                                <div class="form-icon-container">
+                                    <div class="form-floating">
+                                        <input v-model="this.user.username" class="form-control form-icon-input" id="name" type="text" placeholder="Nome" />
+                                        <label class="text-700 form-icon-label" for="name">Username</label>
+                                    </div>
+                                    <icones type="user" class="text-900 fs--1 form-icon" />
+                                </div>
+                            </div>
                             <div class="col-12 col-sm-6">
                                 <div class="form-icon-container">
                                     <div class="form-floating">
@@ -180,7 +194,7 @@ export default {
                     </div>
                     <div class="text-end mb-6">
                         <div>
-                            <button class="btn btn-snipe-secondary me-2">
+                            <button class="btn btn-snipe-secondary me-2" @click="getOutOfPage">
                                 <span>Cancelar</span>
                             </button>
                             <button :disabled="loading" type="submit" class="btn btn-snipe-success">
