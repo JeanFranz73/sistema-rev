@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { isAdmin, isLoggedIn } from '@/middlewares/auth'
+import { isAdmin as admin } from '@/helpers/auth'
 import UserController from '@/controllers/UserController'
 import { UserType } from '@/types/User'
 
@@ -95,6 +96,10 @@ router.patch('/:id', isAdmin, async (req, res) => {
     const newUser = req.body
 
     try {
+        if (!admin(req.get('authorization'))) {
+            delete newUser.role
+            delete newUser.active
+        }
         const user: UserType = await UserController.edit(id, newUser)
 
         if (!user) {
@@ -126,6 +131,32 @@ router.post('/:id/change-password', isAdmin, async (req, res) => {
         })
     } catch (err) {
         console.error('Erro ao alterar senha: ', err)
+        res.status(400).json({
+            message: err.message
+        })
+    }
+})
+
+router.post('/:id/change', isAdmin, async (req, res) => {
+    const id = req.params.id
+
+    try {
+        await UserController.changeStatus(id, true)
+    }    catch (err) {
+        console.error('Erro ao ativar usuário: ', err)
+        res.status(400).json({
+            message: err.message
+        })
+    }
+})
+
+router.post('/:id/deactivate', isAdmin, async (req, res) => {
+    const id = req.params.id
+
+    try {
+        await UserController.changeStatus(id, false)
+    }    catch (err) {
+        console.error('Erro ao desativar usuário: ', err)
         res.status(400).json({
             message: err.message
         })

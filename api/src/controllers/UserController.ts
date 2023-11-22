@@ -40,8 +40,6 @@ class UserController {
     }
 
     async edit(userId: number | string, user: UserType) {
-        
-        delete user.active
 
         const dbUser: UserType = await this.find(userId)
 
@@ -81,6 +79,16 @@ class UserController {
         const hashedPassword = await bcrypt.hash(password, salt)
 
         await UserService.update(user.id, { password: hashedPassword})
+    }
+
+    async changeStatus(userId: number | string, active: boolean) {
+        const user = await this.find(userId)
+
+        if (!user) {
+            throw new Error('Usuário não encontrado')
+        }
+
+        await UserService.update(user.id, { active })
     }
 }
 
