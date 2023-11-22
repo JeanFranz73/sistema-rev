@@ -15,6 +15,10 @@ const post = (endpoint, content) => {
     return api.post(endpoint, content)
 }
 
+const patch = (endpoint, content) => {
+    return api.patch(endpoint, content)
+}
+
 const get = (endpoint) => {
     return api.get(endpoint)
 }
@@ -22,5 +26,6 @@ const get = (endpoint) => {
 export default {
     setBearerToken,
     post,
+    patch,
     get
 }
