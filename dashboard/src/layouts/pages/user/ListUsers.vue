@@ -39,9 +39,6 @@ export default {
 
                     this.users.forEach((user) => {
                         if (user.active) this.activeUsers++
-                        user = {
-                            ...user
-                        }
                     })
 
                     this.loading = false

@@ -89,6 +89,15 @@ export default {
                 }).catch(() => {
                     this.$toasts.error('Não foi possível carregar o usuário.')
                 })
+        },
+        async desactivateUser() {
+            await api.post(`/user/${this.user.username}/deactivate`)
+                .then(res => {
+                    this.$toasts.success("Usuário desativado com sucesso.");
+                    this.$router.push({name: 'users'});
+                }).catch(error => {
+                    console.log(error)
+                })
         }
     },
     mounted() {
@@ -116,7 +125,7 @@ export default {
         <div class="col-auto">
             <div class="row g-2">
                 <div class="col-auto">
-                    <button :class="`btn-snipe-${user.active ? 'danger' : 'primary'}`" class="btn">
+                    <button @click="desactivateUser" :class="`btn-snipe-${user.active ? 'danger' : 'primary'}`" class="btn">
                         <icones type="user-minus" class="me-2" size="13" />
                         <span>Desativar</span>
                     </button>
