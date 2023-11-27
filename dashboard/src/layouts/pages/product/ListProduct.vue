@@ -13,6 +13,7 @@ export default {
             valueNames: ['id', 'name', 'username', 'role', 'email', 'phone', 'active'],
             page: 15
         },
+        categories: [],
         list: null,
         activeProducts: 0,
         productsFilter: 'all'
@@ -31,10 +32,20 @@ export default {
             })
         },
         async init() {
+            await api.get('/products/categories')
+                .then(async (res) => {
+                    this.categories = res.data
+                })
+                .catch((err) => {
+                    if (err.response) {
+                        this.$toasts.error(err.response.data.message)
+                    } else {
+                        this.$toasts.error('Não foi possível carregar as categorias.')
+                    }
+                })
             await api.get('/products')
                 .then(async (res) => {
                     this.products = res.data
-                    console.log(res.data)
                     this.products.forEach((product) => {
                         if (product.active) this.activeProducts++
                     })
@@ -52,6 +63,9 @@ export default {
         },
         addNewProduct(){
             this.$router.push({name: 'new-product'});
+        },
+        getCategory(val) {
+            return this.categories.find((category) => category.id == val).name
         }
     },
     mounted() {
@@ -202,7 +216,7 @@ export default {
                                       <span>{{ product.description }}</span>
                                   </td>
                                   <td class="align-middle white-space-nowrap fw-semi-bold">
-                                      <span>{{ product.category }}</span>
+                                      <span>{{ getCategory(product.category) }}</span>
                                   </td>
                                   <td class="align-middle white-space-nowrap text-end fw-semi-bold">
                                       <span>R$ {{ product.price }}</span>
