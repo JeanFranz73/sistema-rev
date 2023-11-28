@@ -18,11 +18,15 @@ export default {
         size: {
             type: String,
             required: false
+        },
+        color: {
+            type: String,
+            required: false
         }
     },
 }
 </script>
 
 <template>
-    <Icon :icon="iconData" :width="size" :height="size" />
+    <Icon :icon="iconData" :width="size" :height="size" :color="color" />
 </template>
