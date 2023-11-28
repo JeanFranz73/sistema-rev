@@ -31,8 +31,6 @@ class ProductController {
     async edit(ProductId: number | string, Product: ProductType) {
         const dbProduct = await this.find(ProductId)
 
-        console.log(ProductId)
-
         await ProductService.update(dbProduct.id, Product)
 
         return {

@@ -24,7 +24,7 @@ productsRouter.get('/', async (req, res) => {
     }
 })
 
-productsRouter.get('/categories', isLoggedIn, async (req, res) => {
+productsRouter.get('/categories', async (req, res) => {
     try {
         const categories: ProductCategoryType[] = await ProductController.getProductCategories()
 
@@ -79,22 +79,14 @@ router.patch('/:id', isAdmin, async (req, res) => {
     const id = req.params.id
     const newProduct = req.body
 
-    delete newProduct.username
-
     try {
         const product = await ProductController.edit(id, newProduct)
-
-        if (!product) {
-            res.status(404).json({
-                message: 'Produto não encontrado'
-            })
-        }
 
         res.status(200).json(product)
     } catch (err) {
         console.error('Erro ao selecionar produto: ', err)
         res.status(400).json({
-            message: 'Erro ao selecionar produto'
+            message: err.message
         })
     }
 })
