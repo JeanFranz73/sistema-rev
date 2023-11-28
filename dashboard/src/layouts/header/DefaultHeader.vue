@@ -155,9 +155,10 @@ export default defineComponent({
         </div>
         <ul class="navbar-nav navbar-nav-icons flex-row">
             <div class="nav-item">
-                <a class="nav-link icon-indicator icon-indicator-primary" href="../../../apps/e-commerce/landing/cart.html" role="button">
+                <router-link class="nav-link icon-indicator icon-indicator-primary" :to="{ name: 'cart' }" role="button">
                     <icones type="shopping-cart" size="20" />
-                    <span class="icon-indicator-number">3</span></a>
+                    <span class="icon-indicator-number">3</span>
+                </router-link>
             </div>
             <li class="nav-item">
                 <div class="theme-control-toggle px-2">

@@ -18,8 +18,16 @@ const dashboardRoutes = {
     ]
 }
 
+const cartRoute = {
+    path: '/carrinho',
+    name: 'cart',
+    meta: { title: 'Carrinho' },
+    component: () => import('@/pages/order/CartView.vue')
+}
+
 const routes = [
     { path: '/', redirect: { name: 'dashboard' }},
+    cartRoute,
     dashboardRoutes,
     ...authRoutes,
 ]
