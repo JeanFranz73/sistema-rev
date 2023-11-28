@@ -7,10 +7,10 @@ export default [{
     path: 'produto/novo',
     name: 'new-product',
     meta: { title: 'Novo Produto' },
-    component: () => import('@/layouts/pages/product/ListUsers.vue')
+    component: () => import('@/layouts/pages/product/ProductEdit.vue')
 }, {
     path: 'produto/:id',
     name: 'product-detail',
     meta: { title: 'Detalhes do Produto' },
-    component: () => import('@/layouts/pages/product/ListUsers.vue')
+    component: () => import('@/layouts/pages/product/ProductDetails.vue')
 }]
