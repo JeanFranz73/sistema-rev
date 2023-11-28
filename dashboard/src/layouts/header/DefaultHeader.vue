@@ -154,6 +154,11 @@ export default defineComponent({
             </ul>
         </div>
         <ul class="navbar-nav navbar-nav-icons flex-row">
+            <div class="nav-item">
+                <a class="nav-link icon-indicator icon-indicator-primary" href="../../../apps/e-commerce/landing/cart.html" role="button">
+                    <icones type="shopping-cart" size="20" />
+                    <span class="icon-indicator-number">3</span></a>
+            </div>
             <li class="nav-item">
                 <div class="theme-control-toggle px-2">
                     <input class="form-check-input ms-0 theme-control-toggle-input" type="checkbox" v-model="navTheme"
