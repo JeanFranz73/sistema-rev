@@ -32,6 +32,12 @@ export const useCartStore = defineStore('cart', {
          } else {
             this.items[index].amount += amount;
          }
+      },
+      remove(product){
+         const index = this.items.findIndex(item => item.id === product.id);
+         if(index !== -1){
+            this.items.splice(index, 1);
+         }
       }
    }
 })

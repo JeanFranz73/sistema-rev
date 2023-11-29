@@ -1,6 +1,6 @@
 <script>
 import { useCartStore } from  '@/stores/cart.store';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 
 export default {
    name: 'Carrinho',
@@ -13,7 +13,9 @@ export default {
    computed: {
       ...mapState(useCartStore, ['getItems', 'getTotalPrice'])
    },
-   methods: {},
+   methods: {
+    ...mapActions(useCartStore, ['remove']),
+   },
    mounted() {}
 }
 </script>
@@ -42,7 +44,7 @@ export default {
                       <th class="sort align-middle" scope="col" style="width:150px;">Preço</th>
                       <th class="sort align-middle text-end" scope="col" style="width:300px;">Qnt. Itens</th>
                       <th class="sort align-middle text-end" scope="col" style="width:300px;">Total</th>
-                      <th class="sort text-end align-middle pe-0" scope="col"></th>
+                      <th class="sort text-end align-middle pe-0" scope="col">Ação</th>
                     </tr>
                   </thead>
                   <tbody class="list" id="cart-table-body">
@@ -57,6 +59,11 @@ export default {
                       <td class="size align-middle white-space-nowrap text-700 fs--1 fw-semi-bold">R$ {{ item.price.replace('.', ',') }}</td>
                       <td class="price align-middle text-900 fs--1 fw-semi-bold text-end">{{ item.amount }}</td>
                       <td class="total align-middle fw-bold text-1000 text-end">R$ {{ (item.price * item.amount).toFixed(2).replace('.', ',') }}</td>
+                      <td class="total align-middle fw-bold text-1000 text-end">
+                        <button class="btn btn-snipe-secondary" @click="remove(item)">
+                          <icones type="trash" size="16" color="red" />
+                        </button>
+                      </td>
                      </tr>
                      <!-- <tr class="cart-table-row btn-reveal-trigger">
                       <td class="text-1100 fw-semi-bold ps-0 fs-0" colspan="5">Itens subtotal :</td>
