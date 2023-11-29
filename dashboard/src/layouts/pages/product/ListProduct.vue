@@ -139,7 +139,7 @@ export default {
                 <div
                     class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-white border-top border-bottom border-200 position-relative top-1">
                     <div class="table-responsive scrollbar-overlay mx-n1 px-1">
-                        <table class="table table-list table-sm fs--1 mb-0">
+                        <table class="table table-list table-hover table-sm fs--1 mb-0">
                             <thead>
                                 <tr>
                                     <th class="sort align-middle pe-5" data-sort="id">
@@ -199,19 +199,15 @@ export default {
                                 <template v-for="product in products" :key="product.id">
                                     <tr class="position-static" @click="$router.push({ name: 'product-detail', params: { id: product.id } })" :id="product.id">
                                         <td class="id align-middle white-space-nowrap fw-semi-bold">
-                                            <router-link :to="`/product/${product.id}`" class="fw-semi-bold mb-0">
-                                                #{{product.id}}
-                                            </router-link>
+                                            #{{product.id}}
                                         </td>
                                         <td class="image align-middle white-space-nowrap">
                                             <a class="d-block">
                                                 <img src="https://placehold.co/53x53/png" class=" border rounded-2" alt="" width="53" />
                                             </a>
                                         </td>
-                                        <td class="name align-middle ">
-                                            <router-link :to="{ name: 'product-detail', params: { id: product.id } }" class="fw-semi-bold line-clamp-3 mb-0">
+                                        <td class="name align-middle ">                        
                                                 {{product.name}}
-                                            </router-link>
                                         </td>
                                         <td class="category align-middle white-space-nowrap text-600 fs--1  fw-semi-bold">
                                             {{ getCategory(product.category) }}

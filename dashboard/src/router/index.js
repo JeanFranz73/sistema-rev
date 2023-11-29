@@ -6,6 +6,13 @@ import userRoutes from '@/router/admin/user.routes'
 import orderRoutes from '@/router/admin/order.routes'
 import productRoutes from '@/router/admin/product.routes'
 
+const cartRoute = {
+    path: '/carrinho',
+    name: 'cart',
+    meta: { title: 'Carrinho' },
+    component: () => import('@/layouts/pages/order/CartView.vue')
+}
+
 const dashboardRoutes = {
     path: '/painel',
     name: 'dashboard',
@@ -14,20 +21,13 @@ const dashboardRoutes = {
     children: [
         ...userRoutes,
         ...orderRoutes,
-        ...productRoutes
+        ...productRoutes,
+        cartRoute,
     ]
-}
-
-const cartRoute = {
-    path: '/carrinho',
-    name: 'cart',
-    meta: { title: 'Carrinho' },
-    component: () => import('@/pages/order/CartView.vue')
 }
 
 const routes = [
     { path: '/', redirect: { name: 'dashboard' }},
-    cartRoute,
     dashboardRoutes,
     ...authRoutes,
 ]

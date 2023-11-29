@@ -1,11 +1,9 @@
 <script>
-import { defineComponent } from 'vue'
-
-import { useConfigStore, useSessionStore } from '@/stores'
+import { useConfigStore, useSessionStore, useCartStore } from '@/stores'
 import { mapState, mapActions } from 'pinia'
 import { isDesktop, getAvatar } from '@/helpers'
 
-export default defineComponent({
+export default {
     name: 'DefaultHeader',
     data: () => ({
         navTheme: false,
@@ -15,6 +13,7 @@ export default defineComponent({
     computed: {
         ...mapState(useConfigStore, ['getTheme']),
         ...mapState(useSessionStore, ['getFirstName', 'getEmail']),
+        ...mapState(useCartStore, ['getTotalItems']),
         greetings() {
             return `Olá ${this.getFirstName}!`
         }
@@ -48,7 +47,7 @@ export default defineComponent({
             })
         }
     },
-})
+}
 </script>
 
 <template>
@@ -155,9 +154,9 @@ export default defineComponent({
         </div>
         <ul class="navbar-nav navbar-nav-icons flex-row">
             <div class="nav-item">
-                <router-link class="nav-link icon-indicator icon-indicator-primary" :to="{ name: 'cart' }" role="button">
+                <router-link class="nav-link icon-indicator icon-indicator-primary" :to="{ name: 'cart' }">
                     <icones type="shopping-cart" size="20" />
-                    <span class="icon-indicator-number">3</span>
+                    <span class="icon-indicator-number">{{ getTotalItems ?? 0 }}</span>
                 </router-link>
             </div>
             <li class="nav-item">

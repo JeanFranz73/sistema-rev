@@ -1,7 +1,8 @@
 <script>
 import api from '@/utils/api'
-import {useSessionStore} from '@/stores/session.store';
-console.log
+import { useSessionStore } from '@/stores/session.store';
+import { useCartStore } from  '@/stores/cart.store';
+
 export default {
    name: 'ProductDetails',
    data: () => ({
@@ -17,7 +18,7 @@ export default {
          active: true
       },
       admin: false,
-      currentAmount: 0,
+      currentAmount: 1,
    }),
    methods: {
       async getProduct() {
@@ -28,7 +29,7 @@ export default {
                      initial: res.data.name.charAt(0),
                      image: res.data.image ? res.data.image : undefined
                   }
-                  
+                  console.log(res.data)
                   
                   this.noAvatar = false
 
@@ -39,7 +40,7 @@ export default {
                })
       },
       isAdmin() {
-         return seSessionStore().isAdmin;
+         return useSessionStore().isAdmin;
       },
       // async desactivateProduct() {
       //    await api.post(`/user/${this.user.username}/deactivate`)
@@ -58,6 +59,10 @@ export default {
          if (operation == 'plus' && this.currentAmount < this.product.stock) {
             this.currentAmount++
          }
+      },
+      addToCart(item){
+         let cartStore = useCartStore()
+         cartStore.add(item, this.currentAmount)
       }
    },
    mounted() {
@@ -86,9 +91,9 @@ export default {
                 </div>
               </div>
               <div class="d-flex">
-                  <button class="btn btn-lg btn-warning rounded-pill w-100 fs--1 fs-sm-0">
+                  <button class="btn btn-lg btn-warning rounded-pill w-100 fs--1 fs-sm-0" @click="addToCart(this.product)">
                      <icones class="me-2" type="shopping" size="16" />
-                     Add to cart
+                     Adicionar no carrinho
                   </button>
                </div>
             </div>
