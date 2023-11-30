@@ -5,6 +5,7 @@ import { useCartStore } from './cart.store'
 export const installStores = () => {
     useConfigStore().fetch()
     useSessionStore().fetch()
+    useCartStore().fetch()
 }
 
 export {
