@@ -57,6 +57,8 @@ router.beforeEach((to, from, next) => {
             next({ name: 'dashboard' }).then(() => {
                 this.$toasts.success('Você já está logado!')
             })
+        } else if(to.meta.adminRequired && !session.isAdmin) {
+            next({ name: to.meta.useRoute })
         } else {
             next()
         }
