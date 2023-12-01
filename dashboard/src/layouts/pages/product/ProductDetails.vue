@@ -68,9 +68,7 @@ export default {
         },
         addToCart(item){
             this.addItem(item, this.currentAmount)
-            this.$router.push({ name: 'cart' }).then(() => {
-                this.$toasts.success('Produto adicionado ao carrinho.')
-            })
+            this.$toasts.success('Produto adicionado ao carrinho.')
         }
     },
     mounted() {
