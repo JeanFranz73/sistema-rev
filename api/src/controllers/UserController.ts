@@ -43,6 +43,10 @@ class UserController {
 
         const dbUser: UserType = await this.find(userId)
 
+        if (!dbUser) {
+            throw new Error('Usuário não encontrado')
+        }
+
         if (user.password) {
             if (await bcrypt.compare(user.oldPassword, dbUser.password)) {
                 const salt = await bcrypt.genSalt(10)

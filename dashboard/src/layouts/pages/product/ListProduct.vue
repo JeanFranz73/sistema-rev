@@ -2,6 +2,7 @@
 import api from '@/utils/api'
 import { installList } from '@/helpers'
 import { getAvatar } from '@/helpers'
+import { getPrice } from '@/utils'
 
 export default {
     name: 'ListProducts',
@@ -19,6 +20,7 @@ export default {
         productsFilter: 'all'
     }),
     methods: {
+        getPrice,
         showAllProducts() {
             this.productsFilter = 'all'
             this.list.filter(() => {
@@ -142,28 +144,14 @@ export default {
                         <table class="table table-list table-hover table-sm fs--1 mb-0">
                             <thead>
                                 <tr>
-                                    <th class="sort align-middle pe-5" data-sort="id">
-                                        Código
-                                    </th>
-                                    <th></th>
-                                    <th class="sort align-middle pe-5" scope="col" data-sort="name" style="width:10%;">
-                                        Nome
-                                    </th>
-                                    <th class="sort align-middle" scope="col" data-sort="category" style="width:25%">
-                                        Categoria
-                                    </th>
-                                    <th class="sort align-middle text-end" scope="col" data-sort="price">
-                                        Preço
-                                    </th>
-                                    <th class="sort align-middle text-end" scope="col" data-sort="stock">
-                                        Qnt. itens
-                                    </th>
-                                    <th class="sort align-middle text-end" scope="col" data-sort="created">
-                                        Criado em
-                                    </th>
-                                    <th class="sort align-middle text-end" scope="col">
-                                        Ações
-                                    </th>
+                                    <th class="sort white-space-nowrap fs--1 align-middle ps-0" data-sort="id" style="max-width:20px; width:18px;">Código</th>
+                                    <th class="sort white-space-nowrap align-middle fs--2" style="width:70px;"></th>
+                                    <th class="sort white-space-nowrap align-middle ps-4" data-sort="product">Nome</th>
+                                    <th class="sort align-middle ps-4" data-sort="category" style="width:150px;">Categoria</th>
+                                    <th class="sort align-middle text-end ps-4" data-sort="price" style="width:150px;">Preço</th>
+                                    <th class="sort align-middle text-end ps-4" data-sort="stock" style="width:125px;">Estoque</th>
+                                    <th class="sort align-middle text-end ps-4" data-sort="time" style="width:50px;">Criado em</th>
+                                    <th class="sort align-middle text-center pe-0 ps-1" style="width:60px;"></th>
                                 </tr>
                             </thead>
                             <tbody class="list" id="customers-table-body">
@@ -197,32 +185,31 @@ export default {
                                     </td>
                                 </tr>
                                 <template v-for="product in products" :key="product.id">
-                                    <tr class="position-static" @click="$router.push({ name: 'product-detail', params: { id: product.id } })" :id="product.id">
+                                    <tr class="position-static">
                                         <td class="id align-middle white-space-nowrap fw-semi-bold">
                                             #{{product.id}}
                                         </td>
                                         <td class="image align-middle white-space-nowrap">
-                                            <a class="d-block">
-                                                <img src="https://placehold.co/53x53/png" class=" border rounded-2" alt="" width="53" />
-                                            </a>
+                                            <router-link class="d-block" :to="{ name: 'product-detail', params: { id: product.id } }">
+                                                <img src="https://placehold.co/400x400/png" class=" border rounded-2" alt="" width="53" />
+                                            </router-link>
                                         </td>
-                                        <td class="name align-middle ">                        
-                                                {{product.name}}
+                                        <td class="product align-middle ps-4">
+                                            <router-link class="fw-semi-bold mb-0" :to="{ name: 'product-detail', params: { id: product.id } }">
+                                                {{ product.name }}
+                                            </router-link>
                                         </td>
-                                        <td class="category align-middle white-space-nowrap text-600 fs--1  fw-semi-bold">
+                                        <td class="category align-middle white-space-nowrap text-600 fs--1 ps-4 fw-semi-bold">
                                             {{ getCategory(product.category) }}
                                         </td>
-                                        <td class="price align-middle white-space-nowrap text-end fw-bold text-700 ">
-                                            R$ {{ parseInt(product.price).toFixed(2).replace('.', ',') }}
+                                        <td class="price align-middle white-space-nowrap text-end fw-bold text-700 ps-4">
+                                            {{ getPrice(product.price) }}
                                         </td>
-                                        
-                                        <td class="stock align-middle white-space-nowrap text-end fw-bold text-700 ">
+                                        <td class="align-middle stock text-end ps-4">
                                             {{ product.stock }}
                                         </td>
-                                        <td class="created align-middle white-space-nowrap text-600  text-end">
-                                            {{ new Date(product.created).toLocaleString() }}
-                                        </td>
-                                        <td class="align-middle white-space-nowrap text-end pe-0  btn-reveal-trigger">
+                                        <td class="time align-middle white-space-nowrap text-600 ps-4">{{ new Date(product.created).toLocaleString() }}</td>
+                                        <td class="align-middle white-space-nowrap text-end pe-0 btn-reveal-trigger">
                                             <div class="font-sans-serif btn-reveal-trigger position-static">
                                                 <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                     <icones type="dots" class="fs--2" />

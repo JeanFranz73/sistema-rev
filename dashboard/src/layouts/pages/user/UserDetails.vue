@@ -25,7 +25,6 @@ export default {
             phone: '00000000000',
             username: 'usuario',
             image: null,
-            active: true
         },
         ordersOptions: {
             valueNames: ['id', 'status', 'date', 'total'],
@@ -90,18 +89,31 @@ export default {
                     this.$toasts.error('Não foi possível carregar o usuário.')
                 })
         },
-        async desactivateUser() {
-            await api.post(`/user/${this.user.username}/deactivate`)
+        async activateUser() {
+            await api.post(`/user/${this.user.username}/enable`)
                 .then(res => {
-                    this.$toasts.success("Usuário desativado com sucesso.");
-                    this.$router.push({name: 'users'});
+                    this.$router.push({ name: 'users' }).then(() => {
+                        this.$toasts.success('Usuário ativado com sucesso.')
+                    })
+                    this.user.active = true
                 }).catch(error => {
                     console.log(error)
                 })
-        }
+        },
+        async desactivateUser() {
+            await api.post(`/user/${this.user.username}/disable`)
+                .then(res => {
+                    this.$router.push({ name: 'users' }).then(() => {
+                        this.$toasts.success('Usuário desativado com sucesso.')
+                    })
+                    this.user.active = false
+                }).catch(error => {
+                    console.log(error)
+                })
+        },
     },
     mounted() {
-        this.getUser();
+        this.getUser()
     }
 }
 </script>
@@ -125,16 +137,20 @@ export default {
         <div class="col-auto">
             <div class="row g-2">
                 <div class="col-auto">
-                    <button @click="desactivateUser" :class="`btn-snipe-${user.active ? 'danger' : 'primary'}`" class="btn">
+                    <button :disabled="loading" v-if="user.active" @click="desactivateUser" class="btn btn-snipe-danger">
                         <icones type="user-minus" class="me-2" size="13" />
                         <span>Desativar</span>
                     </button>
+                    <button v-else @click="activateUser" class="btn btn-snipe-primary">
+                        <icones type="user-check" class="me-2" size="13" />
+                        <span>Ativar</span>
+                    </button>
                 </div>
                 <div class="col-auto">
-                    <router-link class="btn btn-snipe-secondary" :to="{name: 'user-edit', params: { id: user.username }}">
+                    <button class="btn btn-snipe-secondary" @click="$router.push({ name: 'user-edit', params: { id: user.username }})">
                         <icones type="user-edit" class="me-2" />
                         <span>Editar usuário</span>
-                    </router-link>
+                    </button>
                 </div>
             </div>
         </div>

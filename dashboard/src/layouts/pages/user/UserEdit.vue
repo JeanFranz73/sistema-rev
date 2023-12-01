@@ -1,6 +1,6 @@
 <script>
-import { getAvatar } from '@/helpers';
-import api from '@/utils/api';
+import { getAvatar } from '@/helpers'
+import api from '@/utils/api'
 
 export default {
     name: 'UserEdit',
@@ -8,14 +8,14 @@ export default {
         getAvatar,
         noAvatar: false,
         user: {
-            name: "Novo usuário",
-            username: "",
-            email: "",
-            cpf: "",
-            phone: "",
-            oldPassword: "",
-            password: "",
-            confirmPassword: ""
+            name: 'Novo usuário',
+            username: '',
+            email: '',
+            cpf: '',
+            phone: '',
+            oldPassword: '',
+            password: '',
+            confirmPassword: ''
         },
         loading: false,
         hasParameter: false
@@ -27,60 +27,60 @@ export default {
                     this.user = {
                         image: res.data.image ? res.data.image : undefined
                     }
-                    this.user.username = res.data.username;
-                    this.user.name = res.data.name;
-                    this.user.email = res.data.email;
-                    this.user.cpf = res.data.cpf;
-                    this.user.phone = res.data.phone;
+                    this.user.username = res.data.username
+                    this.user.name = res.data.name
+                    this.user.email = res.data.email
+                    this.user.cpf = res.data.cpf
+                    this.user.phone = res.data.phone
                     this.avatar = getAvatar(this.user.email, 150)
                     this.noAvatar = false
 
                     this.loading = false
                 }).catch((err) => {
-                    console.error(err);
+                    console.error(err)
                     this.$toasts.error('Não foi possível carregar o usuário.')
                 })
         },
         async doSubmit(){
-            this.loading = true;
-            if(this.user.password && this.user.password !== this.user.confirmPassword){
-                this.$toasts.error('As senhas informadas não são iguais.');
-                this.loading = false;
-                throw new Error();
+            this.loading = true
+            if (this.user.password && this.user.password !== this.user.confirmPassword){
+                this.$toasts.error('As senhas informadas não são iguais.')
+                this.loading = false
+                throw new Error()
             }
             
-            if(this.hasParameter){
-                delete this.user.confirmPassword;
-                delete this.user.oldPassword;
-                delete this.user.initial;
-                delete this.user.created;
+            if (this.hasParameter){
+                delete this.user.confirmPassword
+                delete this.user.oldPassword
+                delete this.user.initial
+                delete this.user.created
                 await api.patch(`/user/${this.$route.params.id}`, this.user)
-                .then(res => {
-                    this.$toasts.success("Usuário editado com sucesso.");
-                    this.$router.push({name: 'users'});
-                }).catch(error => {
-                    console.log(error)
-                })
+                    .then(res => {
+                        this.$toasts.success('Usuário editado com sucesso.')
+                        this.$router.push({ name: 'users' })
+                    }).catch(error => {
+                        console.log(error)
+                    })
             } else {
-                delete this.user.confirmPassword;
-                delete this.user.oldPassword;
+                delete this.user.confirmPassword
+                delete this.user.oldPassword
                 await api.post('/user/new', this.user)
                     .then(res => {
-                        this.$toasts.success("Usuário adicionado com sucesso.");
-                        this.$router.push({name: 'users'});
+                        this.$toasts.success('Usuário adicionado com sucesso.')
+                        this.$router.push({ name: 'users' })
                     }).catch(error => {
                         console.log(error)
                     })
             }
-            this.loading = false;
+            this.loading = false
         },
         getOutOfPage(){
-            this.$router.push({name: 'users'});
+            this.$router.push({ name: 'users' })
         }
     },
     mounted(){
-        this.hasParameter = this.$route.params.id;
-        if(this.hasParameter){
+        this.hasParameter = this.$route.params.id
+        if (this.hasParameter){
             this.getUser()
         }
     }
@@ -122,7 +122,7 @@ export default {
                             <div class="col-12 col-sm-6">
                                 <div class="form-icon-container">
                                     <div class="form-floating">
-                                        <input v-model="this.user.username" class="form-control form-icon-input" id="name" type="text" placeholder="Nome" />
+                                        <input v-model="user.username" class="form-control form-icon-input" id="name" type="text" placeholder="Nome" />
                                         <label class="text-700 form-icon-label" for="name">Username</label>
                                     </div>
                                     <icones type="user" class="text-900 fs--1 form-icon" />
@@ -131,7 +131,7 @@ export default {
                             <div class="col-12 col-sm-6">
                                 <div class="form-icon-container">
                                     <div class="form-floating">
-                                        <input v-model="this.user.name" class="form-control form-icon-input" id="name" type="text" placeholder="Nome" />
+                                        <input v-model="user.name" class="form-control form-icon-input" id="name" type="text" placeholder="Nome" />
                                         <label class="text-700 form-icon-label" for="name">Nome</label>
                                     </div>
                                     <icones type="user" class="text-900 fs--1 form-icon" />
@@ -140,7 +140,7 @@ export default {
                             <div class="col-12 col-sm-6">
                                 <div class="form-icon-container">
                                     <div class="form-floating">
-                                        <input v-model="this.user.email" class="form-control form-icon-input" id="email" type="email" placeholder="E-mail" />
+                                        <input v-model="user.email" class="form-control form-icon-input" id="email" type="email" placeholder="E-mail" />
                                         <label class="text-700 form-icon-label" for="email">E-mail</label>
                                     </div>
                                     <icones type="mail" class="text-900 fs--1 form-icon" />
@@ -149,7 +149,7 @@ export default {
                             <div class="col-12 col-sm-6">
                                 <div class="form-icon-container">
                                     <div class="form-floating">
-                                        <input v-model="this.user.cpf" class="form-control form-icon-input" id="cpf" type="cpf" placeholder="E-mail" />
+                                        <input v-model="user.cpf" class="form-control form-icon-input" id="cpf" type="cpf" placeholder="E-mail" />
                                         <label class="text-700 form-icon-label" for="cpf">CPF</label>
                                     </div>
                                     <icones type="mail" class="text-900 fs--1 form-icon" />
@@ -158,7 +158,7 @@ export default {
                             <div class="col-12 col-sm-6">
                                 <div class="form-icon-container">
                                     <div class="form-floating">
-                                        <input v-model="this.user.phone"  class="form-control form-icon-input" id="phone" type="tel" placeholder="Telefone" />
+                                        <input v-model="user.phone" class="form-control form-icon-input" id="phone" type="tel" placeholder="Telefone" />
                                         <label class="text-700 form-icon-label" for="phone">Telefone</label>
                                     </div>
                                     <icones type="phone" class="text-900 fs--1 form-icon" />
@@ -171,21 +171,21 @@ export default {
                             <h4 class="mb-4">{{ hasParameter ? "Alterar senha ": "Criar senha" }}</h4>
                             <div v-if="hasParameter" class="form-icon-container mb-3">
                                 <div class="form-floating">
-                                    <input v-model="this.user.oldPassword" class="form-control form-icon-input" id="oldPassword" type="password" placeholder="Senha antiga" />
+                                    <input v-model="user.oldPassword" class="form-control form-icon-input" id="oldPassword" type="password" placeholder="Senha antiga" />
                                     <label class="text-700 form-icon-label" for="oldPassword">Senha antiga</label>
                                 </div>
                                 <icones type="lock" size="15" class="text-900 fs--1 form-icon" />
                             </div>
                             <div class="form-icon-container mb-3">
                                 <div class="form-floating">
-                                    <input v-model="this.user.password" class="form-control form-icon-input" id="password" type="password" placeholder="Nova senha" />
+                                    <input v-model="user.password" class="form-control form-icon-input" id="password" type="password" placeholder="Nova senha" />
                                     <label class="text-700 form-icon-label" for="password">{{ hasParameter ? "Nova senha" : "Digite uma senha"}}</label>
                                 </div>
                                 <icones type="key" size="15" class="text-900 fs--1 form-icon" />
                             </div>
                             <div class="form-icon-container">
                                 <div class="form-floating">
-                                    <input v-model="this.user.confirmPassword" class="form-control form-icon-input" id="confirmPassword" type="password" placeholder="Confirmar nova senha" />
+                                    <input v-model="user.confirmPassword" class="form-control form-icon-input" id="confirmPassword" type="password" placeholder="Confirmar nova senha" />
                                     <label class="text-700 form-icon-label" for="confirmPassword">{{ hasParameter ? "Confirmar nova senha" : "Confirme a senha"}}</label>
                                 </div>
                                 <icones type="key" size="15" class="text-900 fs--1 form-icon" />

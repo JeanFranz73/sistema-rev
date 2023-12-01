@@ -103,13 +103,13 @@ export default {
                     </ul>
                 </li>
                 <li class="nav-item dropdown" dropdown-hover>
-                    <router-link :to="{ name: 'products' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
+                    <router-link :to="{ name: 'admin-products' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
                         <icones type="cube" class="fs-0 me-2" />
                         <span>Produtos</span>
                     </router-link>
                     <ul class="dropdown-menu navbar-dropdown-caret">
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'products' }">
+                            <router-link class="dropdown-item" :to="{ name: 'admin-products' }">
                                 <div class="dropdown-item-wrapper">
                                     <icones class="me-2" type="cube" size="16" />
                                     <span>Ver produtos</span>
@@ -202,24 +202,24 @@ export default {
                         </div>
                         <div class="overflow-auto scrollbar">
                             <ul class="nav d-flex flex-column mb-2 pb-1">
-                                <li class="nav-item">
+                                <!-- <li class="nav-item">
                                     <a class="nav-link px-3" href="#!">
                                         <icones type="user" size="16" class="me-2 text-900" />
                                         <span>Perfil</span>
                                     </a>
-                                </li>
+                                </li> -->
                                 <li class="nav-item">
-                                    <a class="nav-link px-3" href="#!">
+                                    <router-link :to="{ name: 'dashboard' }" class="nav-link px-3">
                                         <icones type="chart-bar" size="16" class="me-2 text-900" />
                                         <span>Dashboard</span>
-                                    </a>
+                                    </router-link>
                                 </li>
-                                <li class="nav-item">
+                                <!-- <li class="nav-item">
                                     <a class="nav-link px-3" href="#!">
                                         <icones type="settings" size="16" class="me-2 text-900" />
                                         <span>Configurações</span>
                                     </a>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                         <div class="card-footer p-0">

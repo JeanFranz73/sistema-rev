@@ -150,7 +150,20 @@ router.post('/:id/change', isAdmin, async (req, res) => {
     }
 })
 
-router.post('/:id/deactivate', isAdmin, async (req, res) => {
+router.post('/:id/enable', isAdmin, async (req, res) => {
+    const id = req.params.id
+
+    try {
+        await UserController.changeStatus(id, true)
+    }    catch (err) {
+        console.error('Erro ao ativar usuário: ', err)
+        res.status(400).json({
+            message: err.message
+        })
+    }
+})
+
+router.post('/:id/disable', isAdmin, async (req, res) => {
     const id = req.params.id
 
     try {

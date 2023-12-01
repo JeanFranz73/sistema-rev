@@ -16,8 +16,16 @@ export default {
         ...mapState(useCartStore, ['getItems', 'getCategory', 'getTotalPrice', 'isCartEmpty'])
     },
     methods: {
-        ...mapActions(useCartStore, ['remove']),
-        getPrice
+        getPrice,
+        ...mapActions(useCartStore, ['remove', 'clear']),
+        removeItem(id) {
+            this.remove(id)
+            this.$toasts.success('Produto removido do carrinho.')
+        },
+        clearCart() {
+            this.clear()
+            this.$toasts.success('Carrinho limpo.')
+        }
     },
     mounted() {
     }
@@ -46,7 +54,7 @@ export default {
                                         <th class="sort white-space-nowrap align-middle" scope="col" style="min-width:250px;">Produtos</th>
                                         <th class="sort align-middle" scope="col" style="width:80px;">Categoria</th>
                                         <th class="sort align-middle text-end" scope="col" style="width:300px;">Valor</th>
-                                        <th class="sort align-middle ps-5" scope="col" style="width:200px;">Quantidade</th>
+                                        <th class="sort align-middle text-center ps-5" scope="col" style="width:200px;">Quantidade</th>
                                         <th class="sort align-middle text-end" scope="col" style="width:250px;">Total</th>
                                         <th class="sort text-end align-middle pe-0" scope="col"></th>
                                     </tr>
@@ -61,7 +69,7 @@ export default {
                                     <tr v-else v-for="item, i in getItems" :key="i" class="cart-table-row btn-reveal-trigger">
                                         <td class="align-middle white-space-nowrap py-0">
                                             <router-link :to="{ name: 'product-detail', params: { id: item.id }}" class="d-block border rounded-2">
-                                                <img src="https://placehold.co/53x53" class="rounded-1" width="53" />
+                                                <img src="https://placehold.co/400x400/png" class="rounded-1" width="53" />
                                             </router-link>
                                         </td>
                                         <td class="products align-middle">
@@ -78,13 +86,13 @@ export default {
                                         </td>
                                         <td class="total align-middle fw-bold text-1000 text-end">{{ getPrice(item.price * item.amount) }}</td>
                                         <td class="align-middle white-space-nowrap text-end pe-0 ps-3">
-                                            <button @click="remove(item.id)" class="btn btn-sm text-500 hover-text-600 me-2">
+                                            <button @click="removeItem(item.id)" class="btn btn-sm text-500 hover-text-600 me-2">
                                                 <icones type="trash" size="16" />
                                             </button>
                                         </td>
                                     </tr>
                                     <tr class="cart-table-row btn-reveal-trigger">
-                                        <td class="text-1100 fw-semi-bold ps-0 fs-0" colspan="6">Subtotal</td>
+                                        <td class="text-1100 fw-semi-bold ps-0 fs-0" colspan="5">Subtotal</td>
                                         <td class="text-1100 fw-bold text-end fs-0">{{ getPrice(getTotalPrice) }}</td>
                                         <td></td>
                                     </tr>
