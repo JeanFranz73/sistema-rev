@@ -19,6 +19,16 @@ class DefaultService<T> {
         }
     }
 
+    findMany(field, value) {
+        try {
+            const items = db<T>(this.table).whereIn(field, value)
+            return items
+        } catch (err) {
+            console.error(`Erro ao selecionar itens em ${this.table}: `, err)
+            throw err
+        }
+    }
+
     findById(id) {
         try {
             const item = db(this.table).where({ id }).first()

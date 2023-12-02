@@ -1,14 +1,14 @@
-import { ProductType } from '@/types/Product'
+import { Product } from '@/types/Product'
 import ProductService from '@/services/ProductService'
 
 class ProductController {
-    async findAll(): Promise<ProductType[]> {
-        const Products: ProductType[] = await ProductService.findAll()
+    async findAll(): Promise<Product[]> {
+        const Products: Product[] = await ProductService.findAll()
         return Products
     }
 
-    async find(id: number | string): Promise<ProductType> {
-        const Product: ProductType = await ProductService.findById(id)
+    async find(id: number | string): Promise<Product> {
+        const Product: Product = await ProductService.findById(id)
 
         if (!Product) {
             throw new Error('Produto não encontrado')
@@ -17,7 +17,7 @@ class ProductController {
         return Product
     }
 
-    async add(Product: ProductType) {
+    async add(Product: Product) {
 
         const ProductId = await ProductService.create(Product)
 
@@ -28,7 +28,7 @@ class ProductController {
         throw new Error('Erro ao adicionar produto')
     }
 
-    async edit(ProductId: number | string, Product: ProductType) {
+    async edit(ProductId: number | string, Product: Product) {
         const dbProduct = await this.find(ProductId)
 
         await ProductService.update(dbProduct.id, Product)

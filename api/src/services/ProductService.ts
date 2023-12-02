@@ -1,9 +1,9 @@
 import DefaultService from '@/services/default'
-import { ProductType, ProductCategoryType } from '@/types/Product'
+import { Product, ProductCategory } from '@/types/Product'
 
 const table: string = 'products'
 
-export class ProductService extends DefaultService<ProductType> {
+export class ProductService extends DefaultService<Product> {
 
     constructor() {
         super(table)
@@ -11,7 +11,7 @@ export class ProductService extends DefaultService<ProductType> {
 
     getProductCategories() {
         try {
-            const categories = this.db<ProductCategoryType>('product_categories').select()
+            const categories = this.db<ProductCategory>('product_categories').select()
             return categories
         } catch (err) {
             console.error('Erro ao selecionar categorias de produtos: ', err)

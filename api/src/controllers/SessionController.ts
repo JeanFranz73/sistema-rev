@@ -2,13 +2,13 @@ import config from '@/helpers/config'
 import * as bcrypt from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 
-import { SessionType } from '@/types/Session'
+import { Session } from '@/types/Session'
 import UserController from '@/controllers/UserController'
 import SessionService from '@/services/SessionService'
-import { UserType } from '@/types/User'
+import { User } from '@/types/User'
 
 class SessionController {
-    async create(login): Promise<SessionType> {
+    async create(login): Promise<Session> {
 
         const { username, password } = login
 
@@ -16,7 +16,7 @@ class SessionController {
             throw new Error('Usuário não especificado')
         }
 
-        const user: UserType = await UserController.find(username)
+        const user: User = await UserController.find(username)
 
         if (!user) {
             throw new Error('Usuário não encontrado')
@@ -51,7 +51,7 @@ class SessionController {
             expiresIn: '12h'
         })
 
-        const session: SessionType = {
+        const session: Session = {
             token,
             user_id: user.id
         }
@@ -64,7 +64,7 @@ class SessionController {
         }
     }
 
-    async find(token): Promise<SessionType> {
+    async find(token): Promise<Session> {
         const session = await SessionService.findBy('token', token)
         return session
     }

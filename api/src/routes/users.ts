@@ -2,13 +2,13 @@ import { Router } from 'express'
 import { isAdmin, isLoggedIn } from '@/middlewares/auth'
 import { isAdmin as admin } from '@/helpers/auth'
 import UserController from '@/controllers/UserController'
-import { UserType } from '@/types/User'
+import { User } from '@/types/User'
 
-const manyRouter = Router()
+const router = Router()
 
-manyRouter.get('/', async (req, res) => {
+router.get('/', isLoggedIn, async (req, res) => {
     try {
-        const users: UserType[] = await UserController.findAll()
+        const users: User[] = await UserController.findAll()
 
         if (!users) {
             res.status(404).json({
@@ -25,16 +25,6 @@ manyRouter.get('/', async (req, res) => {
     }
 })
 
-export const usersRouter = manyRouter
-
-const router = Router()
-
-router.get('/', async (req, res) => {
-    res.status(422).json({
-        message: 'Usuário não especificado'
-    })
-})
-
 router.post('/new', async (req, res) => {
     const newUser = req.body
 
@@ -42,7 +32,7 @@ router.post('/new', async (req, res) => {
     delete newUser.active
 
     try {
-        const user: UserType = await UserController.add(newUser)
+        const user: User = await UserController.add(newUser)
 
         if (!user) {
             res.status(404).json({
@@ -72,7 +62,7 @@ router.get('/:id', isLoggedIn, async (req, res) => {
     const id = req.params.id
 
     try {
-        const user: UserType = await UserController.find(id)
+        const user: User = await UserController.find(id)
 
         if (!user) {
             res.status(404).json({
@@ -100,7 +90,7 @@ router.patch('/:id', isAdmin, async (req, res) => {
             delete newUser.role
             delete newUser.active
         }
-        const user: UserType = await UserController.edit(id, newUser)
+        const user: User = await UserController.edit(id, newUser)
 
         if (!user) {
             res.status(404).json({

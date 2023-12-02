@@ -1,16 +1,12 @@
-import { userRouter, usersRouter } from '@/routes/users'
-import { productRouter, productsRouter } from '@/routes/products'
+import { userRouter } from '@/routes/users'
+import { productRouter } from '@/routes/products'
+import { orderRouter } from '@/routes/orders'
+
 import authRouter from '@/routes/auth'
 
 export const installRoutes = (app) => {
-    // session authentication
     app.use('/auth', authRouter)
-        
-    // users
-    app.use('/user', userRouter)
-    app.use('/users', usersRouter)
-    
-    // products
-    app.use('/product', productRouter)
-    app.use('/products', productsRouter)
+    app.use(['/user', '/users'], userRouter)
+    app.use(['/product', '/products'], productRouter)
+    app.use(['/order', '/orders'], orderRouter)
 }

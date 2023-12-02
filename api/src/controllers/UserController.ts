@@ -1,12 +1,12 @@
 import * as bcrypt from 'bcrypt'
 
-import { UserType, UserRoleType } from '@/types/User'
+import { User, UserRole } from '@/types/User'
 import UserService from '@/services/UserService'
 
 class UserController {
-    async findAll(): Promise<UserType[]> {
-        const roles: UserRoleType[] = await UserService.getUserRoles()
-        const users: UserType[] = await UserService.findAll()
+    async findAll(): Promise<User[]> {
+        const roles: UserRole[] = await UserService.getUserRoles()
+        const users: User[] = await UserService.findAll()
 
         users.forEach(user => {
             delete user.password
@@ -16,8 +16,8 @@ class UserController {
         return users
     }
 
-    async find(id: number | string): Promise<UserType> {
-        const user: UserType = await UserService.findById(id) ?? UserService.findByUsername(id)
+    async find(id: number | string): Promise<User> {
+        const user: User = await UserService.findById(id) ?? UserService.findByUsername(id)
 
         if (!user) {
             throw new Error('Usuário não encontrado')
@@ -26,7 +26,7 @@ class UserController {
         return user
     }
 
-    async add(user: UserType) {
+    async add(user: User) {
         if (user.password) {
             const salt = await bcrypt.genSalt(10)
             user.password = await bcrypt.hash(user.password, salt)
@@ -39,9 +39,9 @@ class UserController {
         }
     }
 
-    async edit(userId: number | string, user: UserType) {
+    async edit(userId: number | string, user: User) {
 
-        const dbUser: UserType = await this.find(userId)
+        const dbUser: User = await this.find(userId)
 
         if (!dbUser) {
             throw new Error('Usuário não encontrado')

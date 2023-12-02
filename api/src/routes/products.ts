@@ -1,13 +1,16 @@
 import { Router } from 'express'
 import { isAdmin, isLoggedIn } from '@/middlewares/auth'
 import ProductController from '@/controllers/ProductController'
-import { ProductCategoryType, ProductType } from '@/types/Product'
+import { ProductCategory, Product } from '@/types/Product'
+import * as multer from 'multer'
 
-export const productsRouter = Router()
+const upload = multer({ dest: 'uploads/' })
 
-productsRouter.get('/', async (req, res) => {
+const router = Router()
+
+router.get('/', async (req, res) => {
     try {
-        const users: ProductType[] = await ProductController.findAll()
+        const users: Product[] = await ProductController.findAll()
 
         if (!users) {
             res.status(404).json({
@@ -23,29 +26,7 @@ productsRouter.get('/', async (req, res) => {
         })
     }
 })
-
-productsRouter.get('/categories', async (req, res) => {
-    try {
-        const categories: ProductCategoryType[] = await ProductController.getProductCategories()
-
-        if (!categories) {
-            res.status(404).json({
-                message: 'Categorias não encontradas'
-            })
-        }
-
-        res.status(200).json(categories)
-    } catch (err) {
-        console.error('Erro ao selecionar categorias de produtos: ', err)
-        res.status(500).json({
-            message: err.message
-        })
-    }
-})
-
-const router = Router()
-
-router.post('/new', async (req, res) => {
+router.post('/new',  async (req, res) => {
     const newProduct = req.body
 
     delete newProduct.active
@@ -69,10 +50,23 @@ router.post('/new', async (req, res) => {
     }
 })
 
-router.get('/', async (req, res) => {
-    res.status(422).json({
-        message: 'Produto não especificado'
-    })
+router.get('/categories', async (req, res) => {
+    try {
+        const categories: ProductCategory[] = await ProductController.getProductCategories()
+
+        if (!categories) {
+            res.status(404).json({
+                message: 'Categorias não encontradas'
+            })
+        }
+
+        res.status(200).json(categories)
+    } catch (err) {
+        console.error('Erro ao selecionar categorias de produtos: ', err)
+        res.status(500).json({
+            message: err.message
+        })
+    }
 })
 
 router.patch('/:id', isAdmin, async (req, res) => {
@@ -95,7 +89,7 @@ router.get('/:id', isLoggedIn, async (req, res) => {
     const id = req.params.id
 
     try {
-        const product: ProductType = await ProductController.find(id)
+        const product: Product = await ProductController.find(id)
 
         if (!product) {
             res.status(404).json({

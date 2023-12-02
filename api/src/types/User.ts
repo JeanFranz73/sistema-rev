@@ -1,15 +1,15 @@
-export type UserRoleType = {
+export type UserRole = {
     id: number
     name: string
 }
 
-export type UserType = {
+export type User = {
     id: number
     username: string
     name?: string
     oldPassword?: string
     password?: string
-    role: UserRoleType | number
+    role: UserRole | number
     email: string
     active?: boolean
     created?: Date

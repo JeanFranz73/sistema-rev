@@ -1,9 +1,9 @@
 import DefaultService from '@/services/default'
-import { SessionType } from '@/types/Session'
+import { Session } from '@/types/Session'
 
 const table: string = 'sessions'
 
-export class SessionService extends DefaultService<SessionType> {
+export class SessionService extends DefaultService<Session> {
 
     constructor() {
         super(table)

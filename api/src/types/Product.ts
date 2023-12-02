@@ -1,4 +1,4 @@
-export type ProductCategoryType = {
+export type ProductCategory = {
     id: number
     name: string
     description?: string
@@ -6,11 +6,11 @@ export type ProductCategoryType = {
     created: Date
 }
 
-export type ProductType = {
+export type Product = {
     id: number
     name: string
     description?: string
-    category: ProductCategoryType | number
+    category: ProductCategory | number
     price: number
     stock: number
     active: boolean
