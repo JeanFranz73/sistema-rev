@@ -68,9 +68,23 @@ export class OrderService extends DefaultService<Order> {
 
     async findOrderProducts(id) {
         try {
-            const orderProducts = await this.db<OrderProduct>('order_products').where({ order_id: id })
+            const dbOrderProducts = await this.db<OrderProduct>('order_products').where({ order_id: id })
 
-            return ProductService.findMany('id', orderProducts.map(({ product_id }) => product_id))
+            const orderProducts = await ProductService.findMany('id', dbOrderProducts.map(({ product_id }) => product_id))
+
+            const result = []
+
+            dbOrderProducts.map(orderProduct => {
+                const product = orderProducts.find(({ id }) => id === orderProduct.product_id)
+
+                result.push({
+                    unit_price: orderProduct.unit_price,
+                    amount: orderProduct.amount,
+                    ...product
+                })
+            })
+
+            return result
         } catch (err) {
             console.error(`Erro ao consultar produtos do pedido #${id}: `, err)
             throw err
