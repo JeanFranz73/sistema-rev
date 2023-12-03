@@ -31,6 +31,16 @@ export class OrderService extends DefaultService<Order> {
             throw err
         }
     }
+
+    getUserOrders(id) {
+        try {
+            const orders = this.db(table).where({ user: id })
+            return orders
+        } catch (err) {
+            console.error('Erro ao selecionar pedidos do usuário: ', err)
+            throw err
+        }
+    }
 }
 
 export default new OrderService()

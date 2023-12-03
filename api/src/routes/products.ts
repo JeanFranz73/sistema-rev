@@ -2,9 +2,6 @@ import { Router } from 'express'
 import { isAdmin, isLoggedIn } from '@/middlewares/auth'
 import ProductController from '@/controllers/ProductController'
 import { ProductCategory, Product } from '@/types/Product'
-import * as multer from 'multer'
-
-const upload = multer({ dest: 'uploads/' })
 
 const router = Router()
 
@@ -26,7 +23,7 @@ router.get('/', async (req, res) => {
         })
     }
 })
-router.post('/new',  async (req, res) => {
+router.post('/new', async (req, res) => {
     const newProduct = req.body
 
     delete newProduct.active

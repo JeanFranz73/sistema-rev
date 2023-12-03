@@ -109,6 +109,27 @@ router.patch('/:id', isAdmin, async (req, res) => {
     }
 })
 
+router.get('/:id/orders', async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const orders = await UserController.getUserOrders(id)
+
+        if (!orders) {
+            res.status(404).json({
+                message: 'Pedidos não encontrados'
+            })
+        }
+
+        res.status(200).json(orders)
+    } catch (err) {
+        console.error('Erro ao selecionar usuário: ', err)
+        res.status(400).json({
+            message: err.message
+        })
+    }
+})
+
 router.post('/:id/change-password', isAdmin, async (req, res) => {
     const id = req.params.id
     const { oldPassword, password } = req.body

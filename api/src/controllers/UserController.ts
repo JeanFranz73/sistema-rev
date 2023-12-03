@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt'
 
 import { User, UserRole } from '@/types/User'
 import UserService from '@/services/UserService'
+import OrderService from '@/services/OrderService'
 
 class UserController {
     async findAll(): Promise<User[]> {
@@ -93,6 +94,16 @@ class UserController {
         }
 
         await UserService.update(user.id, { active })
+    }
+
+    async getUserOrders(userId: number | string) {
+        const user = await this.find(userId)
+
+        if (!user) {
+            throw new Error('Usuário não encontrado')
+        }
+
+        return await OrderService.getUserOrders(user.id)
     }
 }
 
