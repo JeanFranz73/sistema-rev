@@ -41,7 +41,6 @@ class DefaultService<T> {
 
     findBy(field, value) {
         try {
-            console.log('procurando especificamente por campo', field, 'com valor', value)
             const item = db(this.table).where(field, value).first()
             return item
         } catch (err) {
@@ -51,6 +50,8 @@ class DefaultService<T> {
     }
 
     create(data) {
+        delete data.id
+
         try {
             const item = db(this.table).insert(data)
             return item
@@ -61,6 +62,9 @@ class DefaultService<T> {
     }
 
     update(id, data) {
+        delete data.id
+        delete data.created
+
         try {
             const item = db(this.table).where({ id }).update(data)
             return item
