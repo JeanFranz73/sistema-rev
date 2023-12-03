@@ -7,15 +7,15 @@ const router = Router()
 
 router.get('/', async (req, res) => {
     try {
-        const users: Product[] = await ProductController.findAll()
+        const products: Product[] = await ProductController.findAll()
 
-        if (!users) {
+        if (!products) {
             res.status(404).json({
                 message: 'Produtos não encontrados'
             })
         }
 
-        res.status(200).json(users)
+        res.status(200).json(products)
     } catch (err) {
         console.error('Erro ao selecionar produtos: ', err)
         res.status(500).json({
@@ -23,6 +23,7 @@ router.get('/', async (req, res) => {
         })
     }
 })
+
 router.post('/new', async (req, res) => {
     const newProduct = req.body
 
