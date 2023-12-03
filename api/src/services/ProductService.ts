@@ -18,6 +18,23 @@ export class ProductService extends DefaultService<Product> {
             throw err
         }
     }
+
+    async verifyStock(product: Product) {
+        try {
+            const amount = product.amount || product.stock
+            const dbProduct = await this.findById(product.id)
+            if (!dbProduct) {
+                throw new Error(`Produto #${product.id} não encontrado`)
+            }
+
+            if (dbProduct.stock < amount) {
+                throw new Error(`Produto #${product.id} sem estoque suficiente`)
+            }
+        } catch (err) {
+            console.error('Erro ao verificar estoque: ', err)
+            return err
+        }
+    }
 }
 
 export default new ProductService()

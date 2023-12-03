@@ -13,7 +13,7 @@ class OrderController {
         const order: Order = await OrderService.findOrder(id)
 
         if (!order) {
-            throw new Error('Produto não encontrado')
+            throw new Error('Pedido não encontrado')
         }
 
         const products: Product[] = await OrderService.findOrderProducts(id)
@@ -25,10 +25,10 @@ class OrderController {
     }
 
     async add(order: Order) {
-        const orderId = await OrderService.create(order)
+        const orderId = await OrderService.generate(order)
 
         if (orderId) {
-            return await OrderService.findById(orderId[0])
+            return await this.find(orderId)
         }
     }
 
@@ -37,7 +37,7 @@ class OrderController {
         const dbOrder: Order = await this.find(orderId)
 
         if (!dbOrder) {
-            throw new Error('Usuário não encontrado')
+            throw new Error('Pedido não encontrado')
         }
 
         await OrderService.update(dbOrder.id, order)

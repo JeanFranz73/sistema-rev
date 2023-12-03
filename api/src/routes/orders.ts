@@ -12,20 +12,20 @@ router.get('/', async (req, res) => {
 
         if (!orders) {
             res.status(404).json({
-                message: 'Usuários não encontrados'
+                message: 'Pedidos não encontrados'
             })
         }
 
         res.status(200).json(orders)
     } catch (err) {
-        console.error('Erro ao selecionar usuários: ', err)
+        console.error('Erro ao selecionar pedidos: ', err)
         res.status(500).json({
             message: err.message
         })
     }
 })
 
-router.post('/new', async (req, res) => {
+router.post('/new', isLoggedIn, async (req, res) => {
     const newOrder = req.body
 
     try {
@@ -33,7 +33,7 @@ router.post('/new', async (req, res) => {
 
         if (!order) {
             res.status(404).json({
-                message: 'Usuário não encontrado'
+                message: 'Pedido não encontrado'
             })
         }
 
@@ -43,11 +43,11 @@ router.post('/new', async (req, res) => {
 
         if (err.code === 'ER_DUP_ENTRY') {
             res.status(409).json({
-                message: 'Nome de usuário já existente'
+                message: 'Pedido já existente'
             })
         } else {
             res.status(400).json({
-                message: 'Erro ao criar usuário'
+                message: 'Erro ao gerar pedido'
             })
         }
     }
@@ -61,13 +61,13 @@ router.get('/:id', async (req, res) => {
 
         if (!order) {
             res.status(404).json({
-                message: 'Usuário não encontrado'
+                message: 'Pedido não encontrado'
             })
         }
 
         res.status(200).json(order)
     } catch (err) {
-        console.error('Erro ao selecionar usuário: ', err)
+        console.error('Erro ao selecionar pedido: ', err)
         res.status(400).json({
             message: err.message
         })
@@ -87,15 +87,15 @@ router.patch('/:id', async (req, res) => {
 
         if (!order) {
             res.status(404).json({
-                message: 'Usuário não encontrado'
+                message: 'Pedido não encontrado'
             })
         }
 
         res.status(200).json(order)
     } catch (err) {
-        console.error('Erro ao selecionar usuário: ', err)
+        console.error('Erro ao selecionar pedido: ', err)
         res.status(400).json({
-            message: 'Erro ao selecionar usuário'
+            message: 'Erro ao selecionar pedido'
         })
     }
 })

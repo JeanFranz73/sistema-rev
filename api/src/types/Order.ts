@@ -25,7 +25,7 @@ export type Order = {
     created: Date
     user: User | number
     total: number
-    products: Product[]
+    products: Product[] | number[]
     delivery_status: DeliveryStatus | number
     payment_status: PaymentStatus | number
 }

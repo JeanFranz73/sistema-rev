@@ -11,9 +11,54 @@ export class OrderService extends DefaultService<Order> {
         super(table)
     }
 
+    async generate(order: Order) {
+        try {
+
+            const { products } = order
+
+            if (!order.user) {
+                throw new Error('Usuário do pedido não informado')
+            }
+
+            if (!products || !products.length) {
+                throw new Error('Produtos não informados')
+            }
+
+            products.map(product => {
+                return ProductService.verifyStock(product).then(() => {
+                    console.log(ProductService.update(product.id, {
+                        stock: product.stock - product.amount
+                    }))
+                })
+            })
+
+            const newOrder = await this.db<Order>(table).insert({
+                user: order.user,
+                total: order.total,
+                delivery_status: order.delivery_status,
+                payment_status: order.payment_status,
+            })
+
+            console.log('newOrder: ', newOrder[0])
+
+            await this.db<OrderProduct>('order_products').insert(products.map(
+                product => ({
+                    order_id: newOrder[0],
+                    product_id: product.id,
+                    amount: product.amount,
+                    unit_price: product.price || product.unit_price
+                })
+            ))
+
+            return newOrder[0]
+        } catch (err) {
+            throw err
+        }
+    }
+
     async findOrder(id): Promise<Order> {
         try {
-            const item = this.db(table).where({ id }).first()
+            const item = this.db<Order>(table).where({ id }).first()
             return item
         } catch (err) {
             console.error(`Erro ao selecionar item em ${table}: `, err)

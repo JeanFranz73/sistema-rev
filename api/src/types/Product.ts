@@ -3,7 +3,7 @@ export type ProductCategory = {
     name: string
     description?: string
     active: boolean
-    created: Date
+    created?: Date
 }
 
 export type Product = {
@@ -12,7 +12,8 @@ export type Product = {
     description?: string
     category: ProductCategory | number
     price: number
-    stock: number
+    stock?: number
+    amount?: number
     active: boolean
-    created: Date
+    created?: Date
 }
