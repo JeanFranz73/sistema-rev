@@ -17,6 +17,9 @@ export default {
          activeProducts: 0,
         list: null,
     }),
+    computed: {
+      
+    },
     methods: {
       showProductByCategory(category) {
          // USAR V-MODEL

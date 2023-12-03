@@ -49,10 +49,10 @@ export default {
             return useSessionStore().isAdmin
         },
         async disableProduct() {
-            await api.post(`/product/${this.user.username}/change`)
+            await api.patch(`/product/${this.$route.params.id}/`, {active: false})
                 .then(res => {
                     this.$toasts.success('Produto desativado com sucesso.')
-                    this.$router.push({ name: 'products' })
+                    this.$router.push({ name: 'admin-products' })
                 }).catch(error => {
                     console.log(error)
                 })

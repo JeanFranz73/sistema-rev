@@ -216,7 +216,7 @@ export default {
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end py-2">
                                                     <router-link :to="{ name: 'product-detail', params: { id: product.id } }" class="dropdown-item">Ver</router-link>
-                                                    <router-link :to="{ name: 'product-detail', params: { id: product.id } }" class="dropdown-item">Editar</router-link>
+                                                    <router-link :to="{ name: 'product-edit', params: { id: product.id } }" class="dropdown-item">Editar</router-link>
                                                     <div class="dropdown-divider"></div>
                                                     <a class="dropdown-item text-danger">Desativar</a>
                                                 </div>
