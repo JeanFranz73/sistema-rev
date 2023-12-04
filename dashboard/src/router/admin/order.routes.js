@@ -2,7 +2,7 @@ export default [{
     path: 'pedidos',
     name: 'orders',
     meta: { title: 'Pedidos' },
-    component: () => import('@/layouts/pages/user/ListUsers.vue')
+    component: () => import('@/layouts/pages/order/ListOrder.vue')
 }, {
     path: 'pedido/:id',
     name: 'order-detail',

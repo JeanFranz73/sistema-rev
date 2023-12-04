@@ -3,7 +3,7 @@ export default [{
     name: 'admin-products',
     meta: { title: 'Produtos', adminRequired: true, useRoute: 'products' },
     component: () => import('@/layouts/pages/product/ListProduct.vue')
-},{
+}, {
     path: 'produtos',
     name: 'products',
     meta: { title: 'Produtos', adminRequired: false },
