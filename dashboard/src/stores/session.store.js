@@ -8,7 +8,8 @@ export const useSessionStore = defineStore('session', {
         user: {
             name: 'usuário',
             email: '',
-            role: 0
+            role: 0,
+            id: 0,
         }
     }),
     getters: {

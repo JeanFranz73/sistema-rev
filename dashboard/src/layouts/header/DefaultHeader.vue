@@ -12,7 +12,7 @@ export default {
     }),
     computed: {
         ...mapState(useConfigStore, ['getTheme']),
-        ...mapState(useSessionStore, ['getFirstName', 'getEmail', 'isAdmin']),
+        ...mapState(useSessionStore, ['getFirstName', 'getEmail', 'isAdmin', 'getLoggedUser']),
         ...mapState(useCartStore, ['getTotalItems']),
         greetings() {
             return `Olá ${this.getFirstName}!`
@@ -212,6 +212,12 @@ export default {
                                     <router-link :to="{ name: 'dashboard' }" class="nav-link px-3">
                                         <icones type="chart-bar" size="16" class="me-2 text-900" />
                                         <span>Dashboard</span>
+                                    </router-link>
+                                </li>
+                                <li class="nav-item">
+                                    <router-link :to="{ name: 'user-orders', params: { id: getLoggedUser.id } }" class="nav-link px-3">
+                                        <icones type="clipboard-list" size="16" class="me-2 text-900" />
+                                        <span>Meus pedidos</span>
                                     </router-link>
                                 </li>
                                 <!-- <li class="nav-item">

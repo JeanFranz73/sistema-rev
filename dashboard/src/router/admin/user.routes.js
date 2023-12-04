@@ -19,6 +19,11 @@ export default [{
     meta: { title: 'Editar Usuário' },
     component: () => import('@/layouts/pages/user/UserEdit.vue')
 }, {
+    path: 'usuario/:id/pedidos',
+    name: 'user-orders',
+    meta: { title: 'Pedidos do Usuário' },
+    component: () => import('@/layouts/pages/user/ListOrderUser.vue')
+}, {
     path: 'usuario',
     redirect: { name: 'users' }
 }]

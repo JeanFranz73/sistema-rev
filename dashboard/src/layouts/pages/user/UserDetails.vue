@@ -125,7 +125,20 @@ export default {
                 }).catch(() => {
                     this.$toasts.error('Não foi possível carregar os pedidos do usuário.')
                 })
-        }
+        },
+        formatDate(date){
+         let dateObject = new Date(date);
+         let day = dateObject.getDate();
+         let month = dateObject.getMonth() + 1; 
+         let year = dateObject.getFullYear() % 100; 
+         let hours = dateObject.getHours();
+         let minutes = dateObject.getMinutes();
+
+         hours = hours < 10 ? "0" + hours : hours;
+         minutes = minutes < 10 ? "0" + minutes : minutes;
+         let formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
+         return formattedDateTime;
+      }
     },
     mounted() {
         this.getUser()
@@ -282,16 +295,16 @@ export default {
                             <thead>
                                 <tr>
                                     <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col"
-                                        data-sort="order_id" style="width:15%; min-width:140px">PEDIDO</th>
-                                    <th class="sort align-middle pe-3" scope="col" data-sort="status"
+                                        data-sort="order_id" style="width:15%; min-width:140px">Código do pedido</th>
+                                    <th class="text-center sort align-middle pe-3" scope="col" data-sort="status"
                                         style="width:15%; min-width:180px">
                                         Pagamento do pedido</th>
-                                    <th class="sort align-middle pe-3" scope="col" data-sort="status"
+                                    <th class="text-center sort align-middle pe-3" scope="col" data-sort="status"
                                         style="width:15%; min-width:180px">
                                         Status do pedido</th>
-                                    <th class="sort align-middle pe-0 text-end" scope="col" data-sort="date"
+                                    <th class="text-center sort align-middle pe-0 text-end" scope="col" data-sort="date"
                                         style="width:15%; min-width:160px">Data</th>
-                                    <th class="sort align-middle text-end" scope="col" data-sort="total"
+                                    <th class="text-center sort align-middle text-end" scope="col" data-sort="total"
                                         style="width:15%; min-width:160px">
                                         Total</th>
                                 </tr>
@@ -303,22 +316,22 @@ export default {
                                         <router-link class="fw-semi-bold text-primary"
                                                      :to="`/painel/pedido/${pedido.id}`">#{{ pedido.id }}</router-link>
                                                     </td>
-                                    <td class="status align-middle white-space-nowrap text-start fw-bold text-700 py-2">
+                                    <td class="text-center status align-middle white-space-nowrap text-start fw-bold text-700 py-2">
                                         <span class="badge badge-snipe fs--2"
                                                 :class="`badge-snipe-${getPaymentStatus(pedido.payment_status).badge}`">
                                             <span class="badge-label">{{ getPaymentStatus(pedido.payment_status).desc }}</span>
                                             <icones class="ms-1" :type="getPaymentStatus(pedido.payment_status).icon" size="12.8" />
                                         </span>
                                     </td>
-                                    <td class="status align-middle white-space-nowrap text-start fw-bold text-700 py-2">
+                                    <td class="text-center status align-middle white-space-nowrap text-start fw-bold text-700 py-2">
                                         <span class="badge badge-snipe fs--2"
                                               :class="`badge-snipe-${getPedidoStatus(pedido.delivery_status).badge}`">
                                             <span class="badge-label">{{ getPedidoStatus(pedido.delivery_status).desc }}</span>
                                             <icones class="ms-1" :type="getPedidoStatus(pedido.delivery_status).icon" size="12.8" />
                                         </span>
                                     </td>
-                                    <td class="date align-middle text-700 text-end py-2">{{ pedido.created }}</td>
-                                    <td class="total align-middle fw-semi-bold text-end py-2 text-1000">R$ {{ pedido.total }}
+                                    <td class="text-center date align-middle text-700 text-end py-2">{{ formatDate(pedido.created) }}</td>
+                                    <td class="text-center total align-middle fw-semi-bold text-end py-2 text-1000">R$ {{ pedido.total }}
                                     </td>
                                 </tr>
                             </tbody>
