@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { isAdmin, isLoggedIn } from '@/middlewares/auth'
+import { isLoggedIn } from '@/middlewares/auth'
 import { isAdmin as admin } from '@/helpers/auth'
 import OrderController from '@/controllers/OrderController'
 import { Order } from '@/types/Order'

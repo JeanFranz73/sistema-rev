@@ -181,14 +181,14 @@ export default {
                     </div>
                 </div>
                 
-                <button class="btn btn-snipe-secondary me-2">
+                <!-- <button class="btn btn-snipe-secondary me-2">
                     <icones type="download" class="me-sm-2" />
                     <span class="d-none d-sm-inline-block">Baixar</span>
                 </button>
                 <button class="btn btn-snipe-secondary">
                     <icones type="printer" class="me-sm-2" />
                     <span class="d-none d-sm-inline-block">Imprimir</span>
-                </button>
+                </button> -->
             </div>
         </div>
         <div class="bg-soft dark__bg-1100 p-4 mb-4 rounded-2">

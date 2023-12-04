@@ -29,18 +29,19 @@ export default {
         },
         createOrder() {
             this.ordering = true
-
-            api.post('/order/new', {
+            const order = {
                 user: this.getLoggedUser.id,
-                total: this.getTotalPrice,
+                total: parseFloat(this.getTotalPrice),
                 products: this.getItems.map(item => ({
                     id: item.id,
                     amount: item.amount,
-                    unit_price: item.price
+                    unit_price: parseFloat(item.price),
                 })),
                 delivery_status: 1,
                 payment_status: 1,
-            }).then((res) => {
+            }
+
+            api.post('/order/new', order).then((res) => {
                 this.clearCart()
                 this.$router.push({ name: 'order-detail', params: { id: res.data.id }})
                 this.$toasts.success('Pedido realizado com sucesso!')
