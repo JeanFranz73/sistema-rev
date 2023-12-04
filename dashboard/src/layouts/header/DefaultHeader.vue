@@ -12,7 +12,7 @@ export default {
     }),
     computed: {
         ...mapState(useConfigStore, ['getTheme']),
-        ...mapState(useSessionStore, ['getFirstName', 'getEmail']),
+        ...mapState(useSessionStore, ['getFirstName', 'getEmail', 'isAdmin']),
         ...mapState(useCartStore, ['getTotalItems']),
         greetings() {
             return `Olá ${this.getFirstName}!`
@@ -70,7 +70,7 @@ export default {
         <div class="collapse navbar-collapse navbar-top-collapse order-1 order-lg-0 justify-content-center"
              id="navbarTopCollapse">
             <ul class="navbar-nav navbar-nav-top">
-                <li class="nav-item dropdown" dropdown-hover>
+                <li v-if="isAdmin" class="nav-item dropdown" dropdown-hover>
                     <router-link :to="{ name: 'orders' }" class="nav-link dropdown-toggle lh-1" data-bs-toggle="dropdown">
                         <icones class="fs-0 me-2" type="basket" size="16" />
                         <span>Pedidos</span>
