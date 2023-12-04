@@ -3,7 +3,7 @@ import api from '@/utils/api'
 import { installList, getAvatar } from '@/helpers'
 
 export default {
-   name: 'UserDetails',
+   name: 'ListOrderUser',
    data: () => ({
       pedidos: [],
       ordersOptions: {
