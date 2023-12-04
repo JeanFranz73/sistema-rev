@@ -1,30 +1,54 @@
 <script>
-import { useCartStore } from '@/stores/cart.store'
+import { useCartStore } from '@/stores'
+import { useSessionStore } from '@/stores'
 import { mapState, mapActions } from 'pinia'
 
 import { getPrice } from '@/utils'
+
+import api from '@/utils/api'
 
 export default {
     name: 'CartView',
     data: () => ({
         loading: false,
-        admin: false,
-        currentAmount: 0,
-        listItem: [],
+        ordering: false,
     }),
     computed: {
-        ...mapState(useCartStore, ['getItems', 'getCategory', 'getTotalPrice', 'isCartEmpty'])
+        ...mapState(useCartStore, ['getItems', 'getCategory', 'getTotalPrice', 'isCartEmpty']),
+        ...mapState(useSessionStore, ['getLoggedUser']),
     },
     methods: {
         getPrice,
-        ...mapActions(useCartStore, ['remove', 'clear']),
+        ...mapActions(useCartStore, ['remove', 'clear', 'decrement', 'increment']),
         removeItem(id) {
             this.remove(id)
             this.$toasts.success('Produto removido do carrinho.')
         },
         clearCart() {
             this.clear()
-            this.$toasts.success('Carrinho limpo.')
+        },
+        createOrder() {
+            this.ordering = true
+
+            api.post('/order/new', {
+                user: this.getLoggedUser.id,
+                total: this.getTotalPrice,
+                products: this.getItems.map(item => ({
+                    id: item.id,
+                    amount: item.amount,
+                    unit_price: item.price
+                })),
+                delivery_status: 1,
+                payment_status: 1,
+            }).then((res) => {
+                this.clearCart()
+                this.$router.push({ name: 'order-detail', params: { id: res.data.id }})
+                this.$toasts.success('Pedido realizado com sucesso!')
+            }).catch(() => {
+                this.$toasts.error('Erro ao realizar o pedido.')
+            }).finally(() => {
+                this.ordering = false
+            })
         }
     },
     mounted() {
@@ -79,9 +103,9 @@ export default {
                                         <td class="price align-middle text-900 fs--1 fw-semi-bold text-end">{{ getPrice(item.price) }}</td>
                                         <td class="amount align-middle fs-0 ps-5">
                                             <div class="input-group input-group-sm flex-nowrap">
-                                                <button @click="if (item.amount > 1) item.amount--;" class="btn btn-sm px-2">-</button>
+                                                <button @click="if (item.amount > 1) decrement(item.id);" class="btn btn-sm px-2">-</button>
                                                 <input class="form-control text-center input-spin-none bg-transparent border-0 px-0" type="number" min="1" v-model="item.amount" />
-                                                <button @click="if (item.amount < item.stock) item.amount++;" class="btn btn-sm px-2">+</button>
+                                                <button @click="if (item.amount < item.stock) increment(item.id);" class="btn btn-sm px-2">+</button>
                                             </div>
                                         </td>
                                         <td class="total align-middle fw-bold text-1000 text-end">{{ getPrice(item.price * item.amount) }}</td>
@@ -111,8 +135,8 @@ export default {
                                 <h4 class="mb-0">Total :</h4>
                                 <h4 class="mb-">{{ getPrice(getTotalPrice) }}</h4>
                             </div>
-                            <button class="btn btn-primary w-100">
-                                Realizar o pedido
+                            <button :disabled="isCartEmpty || loading || ordering" class="btn btn-primary w-100" @click="createOrder">
+                                {{ ordering ? 'Realizando pedido...' : 'Finalizar pedido' }}
                                 <icones class="fs--2" type="chevron-right" size="16" />
                             </button>
                         </div>

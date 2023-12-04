@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import { isAdmin, isLoggedIn } from '@/middlewares/auth'
+import { isAdmin } from '@/middlewares/auth'
 import DeliveryDayController from '@/controllers/DeliveryDayController'
 import { DeliveryDay } from '@/types/DeliveryDay'
 
 const router = Router()
 
-router.get('/', isAdmin, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const deliveryDays: DeliveryDay[] = await DeliveryDayController.findAll()
 
@@ -47,7 +47,7 @@ router.post('/new', isAdmin, async (req, res) => {
     }
 })
 
-router.get('/:id', isLoggedIn, async (req, res) => {
+router.get('/:id', async (req, res) => {
     const id = req.params.id
 
     try {

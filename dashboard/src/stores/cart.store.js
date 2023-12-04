@@ -33,7 +33,7 @@ export const useCartStore = defineStore('cart', {
             state.items.forEach(item => {
                 totalPrice += item.price * item.amount
             })
-            return totalPrice
+            return totalPrice.toFixed(2)
         },
         isCartEmpty(state) {
             return state.items.length === 0
@@ -71,6 +71,14 @@ export const useCartStore = defineStore('cart', {
         clear() {
             this.items = []
             localStorage.removeItem('cart')
+        },
+        decrement(id) {
+            this.change(id, this.items.find(item => item.id === id).amount - 1)
+            localStorage.setItem('cart', JSON.stringify(this.items))
+        },
+        increment(id) {
+            this.change(id, this.items.find(item => item.id === id).amount + 1)
+            localStorage.setItem('cart', JSON.stringify(this.items))
         }
     }
 })

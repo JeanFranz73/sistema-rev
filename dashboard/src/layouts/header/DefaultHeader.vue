@@ -84,22 +84,22 @@ export default {
                                 </div>
                             </router-link>
                         </li>
-                        <li>
+                        <!-- <li>
                             <router-link class="dropdown-item" :to="{ name: 'new-order' }">
                                 <div class="dropdown-item-wrapper align-items-center">
                                     <icones class="me-2" type="basket-plus" size="16" />
                                     <span>Novo pedido</span>
                                 </div>
                             </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'new-order' }">
+                        </li> -->
+                        <!-- <li>
+                            <router-link class="dropdown-item" :to="{ name: 'delivery-days' }">
                                 <div class=" dropdown-item-wrapper align-items-center">
                                     <icones class="me-2" type="calendar-event" size="16" />
                                     <span>Dias de entrega</span>
                                 </div>
                             </router-link>
-                        </li>
+                        </li> -->
                     </ul>
                 </li>
                 <li class="nav-item dropdown" dropdown-hover>

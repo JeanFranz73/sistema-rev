@@ -10,5 +10,5 @@ export const installRoutes = (app) => {
     app.use(['/user', '/users'], userRouter)
     app.use(['/product', '/products'], productRouter)
     app.use(['/order', '/orders'], orderRouter)
-    app.use('/delivery-day', deliveryDayRouter)
+    app.use(['/delivery-day', '/delivery-days'], deliveryDayRouter)
 }
