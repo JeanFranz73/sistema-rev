@@ -9,16 +9,7 @@ export default {
         loading: true,
         avatar: '',
         noAvatar: false,
-        pedidos: [
-            { order_id: 2453, status: 4, date: '12/12/2023', total: 87 },
-            { order_id: 2452, status: 1, date: '09/12/2023', total: 7264 },
-            { order_id: 2451, status: 2, date: '04/12/2023', total: 375 },
-            { order_id: 2450, status: 5, date: '01/12/2023', total: 657 },
-            { order_id: 2449, status: 4, date: '28/11/2023', total: 9562 },
-            { order_id: 2448, status: 6, date: '24/11/2023', total: 256 },
-            { order_id: 2446, status: 4, date: '12/11/2023', total: 4116 },
-            { order_id: 2445, status: 4, date: '19/10/2023', total: 4116 }
-        ],
+        pedidos: [],
         user: {
             initial: '',
             name: 'Nome de usuário',
@@ -26,6 +17,7 @@ export default {
             username: 'usuario',
             image: null,
         },
+        totalSpend: 0,
         ordersOptions: {
             valueNames: ['id', 'status', 'date', 'total'],
             page: 5,
@@ -39,35 +31,45 @@ export default {
         },
         getPedidoStatus(status) {
             switch (status) {
-            case 1:
+            case 3:
                 return {
-                    desc: 'Processando',
-                    badge: 'warning',
-                    icon: 'clock'
-                }
+                    desc: 'Cancelado',
+                    badge: 'danger',
+                    icon: 'x'
+            }
             case 2:
-                return {
-                    desc: 'Em preparação',
-                    badge: 'info',
-                    icon: 'info-circle'
-                }
-            case 4:
                 return {
                     desc: 'Entregue',
                     badge: 'success',
                     icon: 'check'
                 }
-            case 5:
+            case 1:
+                return {
+                    desc: 'Pendente',
+                    badge: 'secondary',
+                    icon: 'clock'
+                }
+            }
+        },
+        getPaymentStatus(status) {
+            switch (status) {
+            case 3:
                 return {
                     desc: 'Cancelado',
-                    badge: 'danger',
-                    icon: 'x'
-                }
-            case 6:
+                    badge: 'secondary',
+                    icon: 'check'
+            }
+            case 2:
                 return {
-                    desc: 'Devolvido',
-                    badge: 'info',
-                    icon: 'arrow-back-up'
+                    desc: 'Pago',
+                    badge: 'success',
+                    icon: 'check'
+                }
+            case 1:
+                return {
+                    desc: 'Pendente',
+                    badge: 'secondary',
+                    icon: 'clock'
                 }
             }
         },
@@ -83,7 +85,7 @@ export default {
                     this.avatar = getAvatar(this.user.email, 150)
                     this.noAvatar = false
 
-                    installList(this.$refs.profileOrdersTable, this.ordersOptions)
+                    
                     this.loading = false
                 }).catch(() => {
                     this.$toasts.error('Não foi possível carregar o usuário.')
@@ -111,9 +113,23 @@ export default {
                     console.log(error)
                 })
         },
+        async getOrders() {
+            await api.get(`/user/${this.$route.params.id}/orders`)
+                .then(res => {
+                    this.pedidos = res.data
+                    for(let value = 0; value < res.data.length; value ++) {
+                        this.totalSpend += parseFloat(res.data[value].total)
+                    }
+
+                    this.list = installList(this.$refs.profileOrdersTable, this.ordersOptions)
+                }).catch(() => {
+                    this.$toasts.error('Não foi possível carregar os pedidos do usuário.')
+                })
+        }
     },
     mounted() {
         this.getUser()
+        this.getOrders();
     }
 }
 </script>
@@ -180,7 +196,7 @@ export default {
                     <div class="d-flex flex-between-center pt-4">
                         <div>
                             <h6 class="mb-2 text-800">Total gasto</h6>
-                            <h4 class="fs-1 text-1000 mb-0">$1000</h4>
+                            <h4 class="fs-1 text-1000 mb-0">R$ {{ totalSpend }}</h4>
                         </div>
                         <div class="text-end">
                             <h6 class="mb-2 text-800">Último pedido</h6>
@@ -188,7 +204,7 @@ export default {
                         </div>
                         <div class="text-end">
                             <h6 class="mb-2 text-800">Total de pedidos</h6>
-                            <h4 class="fs-1 text-1000 mb-0">8</h4>
+                            <h4 class="fs-1 text-1000 mb-0">{{ this.pedidos.length }}</h4>
                         </div>
                     </div>
                 </div>
@@ -246,7 +262,7 @@ export default {
                     <a class="nav-link text-nowrap active" id="orders-tab" data-bs-toggle="tab" href="#user-orders">
                         <icones type="shopping-cart" class="me-2" />
                         <span class="me-1">Pedidos</span>
-                        <span class="text-700 fw-normal">(8)</span>
+                        <span class="text-700 fw-normal">({{ this.pedidos.length }})</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -258,7 +274,7 @@ export default {
                 </li>
             </ul>
         </div>
-        <div class="tab-content" id="profileTabContent">
+        <div class="tab-content" id="profileTabContent" v-if="pedidos">
             <div class="tab-pane fade show active" id="user-orders">
                 <div class="border-top border-bottom border-200" ref="profileOrdersTable" id="profile-orders">
                     <div class="table-responsive scrollbar">
@@ -267,6 +283,9 @@ export default {
                                 <tr>
                                     <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col"
                                         data-sort="order_id" style="width:15%; min-width:140px">PEDIDO</th>
+                                    <th class="sort align-middle pe-3" scope="col" data-sort="status"
+                                        style="width:15%; min-width:180px">
+                                        Pagamento do pedido</th>
                                     <th class="sort align-middle pe-3" scope="col" data-sort="status"
                                         style="width:15%; min-width:180px">
                                         Status do pedido</th>
@@ -282,17 +301,24 @@ export default {
                                     class="hover-actions-trigger btn-reveal-trigger position-static">
                                     <td class="order align-middle white-space-nowrap py-2 ps-0">
                                         <router-link class="fw-semi-bold text-primary"
-                                                     :to="`/dashboard/pedido/${pedido.id}`">#{{ pedido.order_id }}</router-link>
+                                                     :to="`/painel/pedido/${pedido.id}`">#{{ pedido.id }}</router-link>
+                                                    </td>
+                                    <td class="status align-middle white-space-nowrap text-start fw-bold text-700 py-2">
+                                        <span class="badge badge-snipe fs--2"
+                                                :class="`badge-snipe-${getPaymentStatus(pedido.payment_status).badge}`">
+                                            <span class="badge-label">{{ getPaymentStatus(pedido.payment_status).desc }}</span>
+                                            <icones class="ms-1" :type="getPaymentStatus(pedido.payment_status).icon" size="12.8" />
+                                        </span>
                                     </td>
                                     <td class="status align-middle white-space-nowrap text-start fw-bold text-700 py-2">
                                         <span class="badge badge-snipe fs--2"
-                                              :class="`badge-snipe-${getPedidoStatus(pedido.status).badge}`">
-                                            <span class="badge-label">{{ getPedidoStatus(pedido.status).desc }}</span>
-                                            <icones class="ms-1" :type="getPedidoStatus(pedido.status).icon" size="12.8" />
+                                              :class="`badge-snipe-${getPedidoStatus(pedido.delivery_status).badge}`">
+                                            <span class="badge-label">{{ getPedidoStatus(pedido.delivery_status).desc }}</span>
+                                            <icones class="ms-1" :type="getPedidoStatus(pedido.delivery_status).icon" size="12.8" />
                                         </span>
                                     </td>
-                                    <td class="date align-middle text-700 text-end py-2">{{ pedido.date }}</td>
-                                    <td class="total align-middle fw-semi-bold text-end py-2 text-1000">${{ pedido.total }}
+                                    <td class="date align-middle text-700 text-end py-2">{{ pedido.created }}</td>
+                                    <td class="total align-middle fw-semi-bold text-end py-2 text-1000">R$ {{ pedido.total }}
                                     </td>
                                 </tr>
                             </tbody>
