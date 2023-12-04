@@ -3,59 +3,53 @@ import api from '@/utils/api'
 import { installList } from '@/helpers'
 
 export default {
-    name: 'ListProductsClient',
-    data: () => ({
-        loading: true,
-        products: [],
-        filteredProducts: [],
-        categories: [],
-        checkedCategory: [],
-        optionsList: {
-            valueNames: ['id', 'name', 'price', 'description'],
-            page: 15
-         },
-         activeProducts: 0,
-        list: null,
-    }),
-    computed: {
-      
-    },
-    methods: {
-      showProductByCategory(category) {
-         // USAR V-MODEL
-         // USAR COMPUTED
+   name: 'ListProductsClient',
+   data: () => ({
+      loading: true,
+      products: [],
+      categories: [],
+      checkedCategory: [],
+      optionsList: {
+         valueNames: ['id', 'name', 'price', 'description'],
+         page: 15
       },
-      async init() {
-         await api.get('/products/categories')
-               .then(async (res) => {
-                  this.categories = res.data
+      activeProducts: 0,
+   }),
+   computed: {
+      computedProducts() {
+         return this.checkedCategory.length > 0 ? this.products.filter(product => this.checkedCategory.includes(product.category)) : this.products
+      },
+   },
+   methods: {
+    async init() {
+      await api.get('/products/categories')
+            .then(async (res) => {
+               this.categories = res.data
+            })
+            .catch((err) => {
+               if (err.response) {
+                  this.$toasts.error(err.response.data.message)
+               } else {
+                  this.$toasts.error('Não foi possível carregar as categorias.')
+               }
+            })
+      await api.get('/products')
+            .then(async (res) => {
+               this.products = res.data
+               this.products.forEach((product) => {
+                  if (product.stock > 0) this.activeProducts++
                })
-               .catch((err) => {
-                  if (err.response) {
-                     this.$toasts.error(err.response.data.message)
-                  } else {
-                     this.$toasts.error('Não foi possível carregar as categorias.')
-                  }
-               })
-         await api.get('/products')
-               .then(async (res) => {
-                  this.products = res.data
-                  this.filteredProducts = res.data
-                  this.products.forEach((product) => {
-                     if (product.stock > 0) this.activeProducts++
-                  })
 
-                  this.loading = false
-                  this.list = await installList(this.$refs.productsList, this.optionsList)
-               })
-               .catch((err) => {
-                  if (err.response) {
-                     this.$toasts.error(err.response.data.message)
-                  } else {
-                     this.$toasts.error('Não foi possível carregar os produtos.')
-                  }
-               })
-      },
+               this.loading = false
+            })
+            .catch((err) => {
+               if (err.response) {
+                  this.$toasts.error(err.response.data.message)
+               } else {
+                  this.$toasts.error('Não foi possível carregar os produtos.')
+               }
+            })
+    },
    },
    mounted() {
       this.init()
@@ -93,22 +87,33 @@ export default {
                </div><a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseAvailability" role="button" aria-expanded="true" aria-controls="collapseAvailability">
                   <div class="d-flex align-items-center justify-content-between w-100">
                   <div class="fs-0 text-1000">Categoria</div>
+
                   </div>
                </a>
                <div class="collapse show" id="collapseAvailability">
                   <div class="mb-2">
-                  <div class="form-check mb-0" v-for="category in categories" >
-                        <input :key="category.id" :id="category.name" :name="category.name" @change="showProductByCategory(category)" type="checkbox" class="form-check-input mt-0" >
-                        <label class="form-check-label d-block lh-sm fs-0 text-900 fw-normal mb-0" for="inStockInput">{{ category.name }}</label>
+                  <div class="form-check mb-0" v-for="category in categories">
+                        <input 
+                          v-model="checkedCategory" 
+                          :key="category.id"
+                          :id="`category-${category.name}`"
+                          :value="category.id" 
+                          type="checkbox" 
+                          class="form-check-input mt-0" >
+                        <label class="form-check-label d-block lh-sm fs-0 text-900 fw-normal mb-0" :for="`category-${category.name}`">{{ category.name }}</label>
                   </div>
                   </div>
                </div>
             </div>
-            <div class="phoenix-offcanvas-backdrop d-lg-none" data-phoenix-backdrop=""></div>
+            <div class="phoenix-offcanvas-backdrop d-lg-none"></div>
             </div>
             <div class="col-lg-9 col-xxl-10">
             <div class="row gx-3 gy-6 mb-8 list">
-               <div v-for="product in products" :key="product.id" class=" col-12 col-sm-6 col-md-4 col-xxl-2">
+               <router-link 
+                  :to="{ name: 'product-detail', params: { id: product.id }}" 
+                  v-for="product in computedProducts" 
+                  :key="product.id"  
+                  class="text-decoration-none col-12 col-sm-6 col-md-4 col-xxl-2">
                   <div class="product-card-container h-100">
                   <div class="position-relative text-decoration-none product-card h-100">
                      <div class="d-flex flex-column justify-content-between h-100">
@@ -129,22 +134,7 @@ export default {
                      </div>
                   </div>
                   </div>
-               </div>
-            </div>
-            <div class="d-flex justify-content-end">
-               <nav aria-label="Page navigation example">
-                  <ul class="pagination mb-0">
-                  <li class="page-item">
-                     <button class="page-link" data-list-pagination="prev">
-                        <icones type="chevron-left" />
-                  </button>
-                  </li>
-                  <ul class="mb-0 pagination"></ul>
-                  <button class="page-link pe-0" data-list-pagination="next">
-                     <icones type="chevron-right" />
-                  </button>
-                  </ul>
-               </nav>
+               </router-link>
             </div>
             </div>
          </div>
